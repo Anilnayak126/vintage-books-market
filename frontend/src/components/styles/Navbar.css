@@ -1,0 +1,21 @@
+
+.hamburger span {
+    display: block;
+    background-color: #fff; 
+    width: 1.5rem; 
+    height: 0.125rem;
+    margin-bottom: 0.25rem; 
+    transition: transform 0.3s ease, opacity 0.3s ease; }
+  
+ 
+  .hamburger.open span:nth-child(1) {
+    transform: translateY(0.5rem) rotate(45deg); }
+  
+  .hamburger.open span:nth-child(2) {
+    opacity: 0; 
+  }
+  
+  .hamburger.open span:nth-child(3) {
+    transform: translateY(-0.5rem) rotate(-45deg); 
+  }
+  
