@@ -3,6 +3,8 @@ from .models import CustomUser, UserProfile
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
 from rest_framework.exceptions import ValidationError
+from django.contrib.auth import password_validation
+from django.contrib.auth.models import User
 
 
 
@@ -57,3 +59,23 @@ class LoginSerializer(serializers.Serializer):
             'refresh': str(refresh),
             'user': user_data
         }
+    
+class ChangePasswordSerializer(serializers.Serializer):
+    old_password = serializers.CharField(write_only=True)
+    new_password = serializers.CharField(write_only=True)
+    confirm_password = serializers.CharField(write_only=True)
+
+    def validate(self, data):
+       
+        if data['new_password'] != data['confirm_password']:
+            raise ValidationError("New password and confirm password do not match.")
+
+        
+        user = self.context['request'].user
+        if not user.check_password(data['old_password']):
+            raise ValidationError("Old password is incorrect.")
+
+       
+        password_validation.validate_password(data['new_password'], user)
+
+        return data
