@@ -1,13 +1,24 @@
-// src/components/Navbar.js
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import './styles/Navbar.css'
+import { Link, useNavigate } from 'react-router-dom'; // Import useNavigate
+import { useSelector, useDispatch } from 'react-redux';
+import { logout } from '../redux/authSlice'; // Adjust the path if necessary
+import './styles/Navbar.css';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const dispatch = useDispatch();
+  const navigate = useNavigate(); // Use navigate to redirect after logout
+
+  // Get the user from Redux state
+  const user = useSelector((state) => state.auth.user);
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
+  };
+
+  const handleLogout = () => {
+    dispatch(logout()); // This action should clear the user's session in Redux
+    navigate('/login'); // Redirect to login page after logging out
   };
 
   return (
@@ -70,6 +81,30 @@ const Navbar = () => {
           >
             Cart
           </Link>
+
+          {/* Conditionally render user info or login link */}
+          {user ? (
+            <div className="flex items-center space-x-4">
+              <span className="text-yellow-400">Welcome, {user.username}!</span>
+              <button
+                onClick={() => {
+                  handleLogout();
+                  setIsOpen(false);
+                }}
+                className="hover:text-yellow-400 transition duration-300"
+              >
+                Logout
+              </button>
+            </div>
+          ) : (
+            <Link
+              to="/login"
+              className="hover:text-yellow-400 transition duration-300"
+              onClick={() => setIsOpen(false)}
+            >
+              Login
+            </Link>
+          )}
         </div>
       </div>
     </nav>

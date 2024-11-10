@@ -5,23 +5,46 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from .serializers import UserSerializer, LoginSerializer,ChangePasswordSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth.models import User
+from .models import UserProfile
+
+from rest_framework.parsers import MultiPartParser, FormParser
 
 
-# Register View
+
 class RegisterView(APIView):
     permission_classes = [AllowAny]
+    parser_classes = [MultiPartParser, FormParser]
 
     def post(self, request):
-        serializer = UserSerializer(data=request.data)
+        
+        user_data = request.data.copy()  
+        
+       
+        profile_image = request.FILES.get('profile_image')  
+        
+        
+        user_data['profile_image'] = profile_image
+
+       
+        serializer = UserSerializer(data=user_data)
+
         if serializer.is_valid():
-            serializer.save()  
+            user = serializer.save() 
+           
+            UserProfile.objects.create(
+                user=user,
+                phone_number=user_data.get('phone_number', ''),
+                address=user_data.get('address', ''),
+                profile_image=profile_image 
+            )
+            
             return Response({"message": "User registered successfully"}, status=status.HTTP_201_CREATED)
 
+        
         print("Errors:", serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-# Login View
 class LoginView(APIView):
     permission_classes = [AllowAny]
 
@@ -33,7 +56,7 @@ class LoginView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-# User Profile View
+
 class UserProfileView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -64,12 +87,12 @@ class LogoutView(APIView):
 
     def post(self, request):
         try:
-           
+            
             refresh_token = request.data.get("refresh_token")
             if not refresh_token:
                 return Response({"detail": "Refresh token is required."}, status=status.HTTP_400_BAD_REQUEST)
 
-            
+           
             token = RefreshToken(refresh_token)
             token.blacklist()
 
