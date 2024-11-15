@@ -1,3 +1,15 @@
+@import 'animate.css';
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+body {
+    @apply min-h-screen bg-gradient-to-b from-gray-900 to-black text-gray-200;
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    color: #E0E0E0;
+    padding: 0;
+    margin: 0;
+}
