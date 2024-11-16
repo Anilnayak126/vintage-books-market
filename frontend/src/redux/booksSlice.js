@@ -3,10 +3,10 @@ import axios from "axios";
 
 const API_URL = "http://127.0.0.1:8000/manage_p/books/";
 
-
+// Fetch all books with filters and pagination
 export const fetchBooks = createAsyncThunk(
   "books/fetchBooks",
-  async ({ page, search, minPrice, maxPrice }, { rejectWithValue }) => {
+  async ({ page = 1, search, minPrice, maxPrice }, { rejectWithValue }) => {
     try {
       const params = new URLSearchParams();
       params.append("page", page);
@@ -15,16 +15,23 @@ export const fetchBooks = createAsyncThunk(
       if (maxPrice) params.append("max_price", maxPrice);
 
       const response = await axios.get(`${API_URL}?${params.toString()}`);
-      
-      const totalPages = Math.ceil(response.data.count / 10); 
 
+      console.log(response);
+      
+
+      if (!response.data.count) {
+        throw new Error("Missing count in API response");
+      }
+
+      const totalPages = Math.ceil(response.data.count / 9); 
       return {
         books: response.data.results,
         totalPages,
-        currentPage: page
+        currentPage: page,
       };
     } catch (error) {
-      return rejectWithValue(error.response.data);
+      console.error("Error fetching books:", error.message);
+      return rejectWithValue(error.response?.data || "Failed to fetch books.");
     }
   }
 );
@@ -34,19 +41,15 @@ export const createBook = createAsyncThunk(
   "books/createBook",
   async (bookData, { rejectWithValue }) => {
     try {
-      const response = await axios.post(
-        `${API_URL}create/`,
-        bookData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-          },
-        }
-      );
+      const response = await axios.post(`${API_URL}create/`, bookData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
+      });
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response.data);
+      return rejectWithValue(error.response?.data || "Failed to create book.");
     }
   }
 );
@@ -63,7 +66,7 @@ export const fetchBookById = createAsyncThunk(
       });
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response.data);
+      return rejectWithValue(error.response?.data || "Failed to fetch book details.");
     }
   }
 );
@@ -71,16 +74,24 @@ export const fetchBookById = createAsyncThunk(
 // Fetch books specific to the authenticated user
 export const fetchUserBooks = createAsyncThunk(
   "books/fetchUserBooks",
-  async (_, { rejectWithValue }) => {
+  async ({ page = 1 }, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`http://127.0.0.1:8000/manage_p/user/books/`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-        },
-      });
-      return response.data;
+      const response = await axios.get(
+        `http://127.0.0.1:8000/manage_p/user/books/?page=${page}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+        }
+      );
+
+      return {
+        books: response.data.results,
+        totalPages: Math.ceil(response.data.count / 3), 
+        currentPage: page,
+      };
     } catch (error) {
-      return rejectWithValue(error.response.data);
+      return rejectWithValue(error.response?.data || "Failed to fetch user books.");
     }
   }
 );
@@ -102,7 +113,7 @@ export const updateBook = createAsyncThunk(
       );
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response.data);
+      return rejectWithValue(error.response?.data || "Failed to update book.");
     }
   }
 );
@@ -119,17 +130,20 @@ export const deleteBook = createAsyncThunk(
       });
       return id;
     } catch (error) {
-      return rejectWithValue(error.response.data);
+      return rejectWithValue(error.response?.data || "Failed to delete book.");
     }
   }
 );
 
+// Books Slice
 const booksSlice = createSlice({
   name: "books",
   initialState: {
     books: [], // All books
     userBooks: [], // Books created by the authenticated user
     bookDetails: null, // Details of a single book
+    totalPages: 1, // Total pages for pagination
+    currentPage: 1, // Current page
     isLoading: false,
     error: null,
     createStatus: "idle",
@@ -146,13 +160,13 @@ const booksSlice = createSlice({
       })
       .addCase(fetchBooks.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.books = action.payload.books || [];
-        state.totalPages = action.payload.totalPages || 0;
-        state.currentPage = action.payload.currentPage || 1;
+        state.books = action.payload.books;
+        state.totalPages = action.payload.totalPages;
+        state.currentPage = action.payload.currentPage;
       })
       .addCase(fetchBooks.rejected, (state, action) => {
         state.isLoading = false;
-        state.error = action.payload || "Failed to fetch books.";
+        state.error = action.payload;
       })
       // Create a book
       .addCase(createBook.pending, (state) => {
@@ -184,7 +198,9 @@ const booksSlice = createSlice({
       })
       .addCase(fetchUserBooks.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.userBooks = action.payload;
+        state.userBooks = action.payload.books;
+        state.totalPages = action.payload.totalPages;
+        state.currentPage = action.payload.currentPage;
       })
       .addCase(fetchUserBooks.rejected, (state, action) => {
         state.isLoading = false;

@@ -25,10 +25,10 @@ const Navbar = () => {
     <nav className="bg-black text-white p-4 shadow-lg sticky top-0 z-50">
       <div className="container mx-auto flex justify-between items-center">
         
-        {/* Logo */}
-        <Link to="/" className="text-2xl font-bold text-yellow-400">
-          Vintage Book Market
-        </Link>
+      <Link to="/" className="text-2xl font-bold bg-gradient-to-r from-yellow-400 via-green-400 to-blue-500 text-transparent bg-clip-text">
+  Vintage Book Market
+</Link>
+
 
         {/* Hamburger Icon for Mobile */}
         <div className="md:hidden" onClick={toggleMenu}>
@@ -65,7 +65,7 @@ const Navbar = () => {
           {/* User or Login Link */}
           {user ? (
             <div className="flex items-center space-x-4">
-              <span className="text-yellow-400">Welcome, {user.username}!</span>
+              <span className="text-yellow-400">Welcome, {user.first_name}!</span>
               <button
                 onClick={() => {
                   handleLogout();

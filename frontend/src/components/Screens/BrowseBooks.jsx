@@ -5,7 +5,7 @@ import BookCard from "./ManageProducts/BookCard";
 
 const BrowseBooks = () => {
   const dispatch = useDispatch();
-  const { books, isLoading, error, currentPage, totalPages } = useSelector(
+  const { books, isLoading, error, currentPage, totalPages, totalCount } = useSelector(
     (state) => state.books
   );
 
@@ -40,12 +40,12 @@ const BrowseBooks = () => {
   };
 
   return (
-    <div className="min-h-screen p-6">
+    <div className="min-h-screen p-6 bg-gray-900">
       <div className="max-w-7xl mx-auto">
-        <h1 className="text-3xl font-bold text-gray-100 mb-6">Browse Books</h1>
+        <h1 className="text-3xl font-bold text-white mb-6">Browse Books</h1>
 
         {/* Filters Section */}
-        <div className="p-6 shadow-lg rounded-lg flex flex-col sm:flex-row items-center gap-4 mb-6">
+        <div className="p-6 shadow-lg rounded-lg flex flex-col sm:flex-row items-center gap-4 mb-6 bg-gray-800">
           <input
             type="text"
             placeholder="Search by title, author, or description"
@@ -79,7 +79,7 @@ const BrowseBooks = () => {
         {error && <p className="text-center text-red-600">Error: {error}</p>}
 
         {/* Books Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {books && books.length > 0 ? (
             books.map((book) => (
               <BookCard key={book.id} book={book} isLoading={isLoading} />
@@ -97,11 +97,11 @@ const BrowseBooks = () => {
                 key={page}
                 disabled={currentPage === page + 1}
                 onClick={() => handlePageChange(page + 1)}
-                className={`px-4 py-2 rounded-lg ${
+                className={`px-4 py-2 rounded-lg text-white ${
                   currentPage === page + 1
-                    ? "bg-blue-600 text-white"
-                    : "bg-gray-200 text-gray-800 hover:bg-gray-300"
-                }`}
+                    ? "bg-blue-600"
+                    : "bg-gray-600 hover:bg-blue-600"
+                } transition duration-300`}
               >
                 {page + 1}
               </button>

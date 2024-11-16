@@ -9,33 +9,28 @@ from rest_framework.pagination import PageNumberPagination
 from django.db.models import Q
 
 
-# List all books
-'''class BookListView(APIView):
-    permission_classes = [AllowAny]
-    def get(self, request):
-        books = Book.objects.all()
-        serializer = BookSerializer(books, many=True)
-        return Response(serializer.data)'''
 
 class BookPagination(PageNumberPagination):
-    page_size = 10  # Number of items per page
+    page_size = 9
     page_size_query_param = 'page_size'
     max_page_size = 100
+
+class UserBookPagination(PageNumberPagination):
+    page_size = 3  
+    page_size_query_param = 'page_size'
+    max_page_size = 10  
 
 class BookListView(APIView):
     permission_classes = [AllowAny]
 
     def get(self, request):
-        # Query parameters for search and filter
-        search_term = request.query_params.get('search', '')  # Search term for title, author, etc.
-        condition = request.query_params.get('condition', None)  # Filter by condition (e.g., new or used)
-        min_price = request.query_params.get('min_price', None)  # Minimum price filter
-        max_price = request.query_params.get('max_price', None)  # Maximum price filter
+        search_term = request.query_params.get('search', '') 
+        condition = request.query_params.get('condition', None)  
+        min_price = request.query_params.get('min_price', None) 
+        max_price = request.query_params.get('max_price', None)  
         
-        # Base query: get all books
         books = Book.objects.all()
 
-        # Apply search filters
         if search_term:
             books = books.filter(
                 Q(title__icontains=search_term) |  # Search in title
@@ -43,85 +38,23 @@ class BookListView(APIView):
                 Q(description__icontains=search_term)  # Search in description
             )
 
-        # Apply condition filter (if you have such a field)
         if condition:
             books = books.filter(condition__icontains=condition)
 
-        # Apply price range filter
         if min_price:
             books = books.filter(price__gte=min_price)
         if max_price:
             books = books.filter(price__lte=max_price)
         
 
-        # Paginate results
         paginator = BookPagination()
         paginated_books = paginator.paginate_queryset(books, request)
         
-        # Serialize the data
         serializer = BookSerializer(paginated_books, many=True)
         
-        # Return paginated response
         return paginator.get_paginated_response(serializer.data)
 
 
-'''class BookListView(APIView):
-    permission_classes = [AllowAny]
-
-    def get(self, request):
-        # Query parameters for search and filter
-        search_term = request.query_params.get('search', '')  # Search term for title, author, etc.
-        condition = request.query_params.get('condition', None)  # Filter by condition (e.g., new or used)
-        min_price = request.query_params.get('min_price', None)  # Minimum price filter
-        max_price = request.query_params.get('max_price', None)  # Maximum price filter
-        genre = request.query_params.get('genre', None)  # Genre filter
-        sort_by = request.query_params.get('sort_by', 'title')  # Sort field, default is 'title'
-
-        # Base query: get all books
-        books = Book.objects.all()
-
-        # Apply search filters
-        if search_term:
-            books = books.filter(
-                Q(title__icontains=search_term) |
-                Q(author__icontains=search_term) |
-                Q(description__icontains=search_term)
-            )
-
-        # Apply condition filter
-        if condition:
-            books = books.filter(condition__icontains=condition)
-
-        # Apply price range filters
-        if min_price:
-            books = books.filter(price__gte=min_price)
-        if max_price:
-            books = books.filter(price__lte=max_price)
-
-        # Apply genre filter
-        if genre:
-            books = books.filter(genre__iexact=genre)
-
-        # Apply sorting
-        if sort_by and sort_by in ['title', 'price', 'author']:  # Validate sort_by field
-            books = books.order_by(sort_by)
-        else:
-            books = books.order_by('title')  # Default sorting
-
-        # Debugging SQL query
-        print(str(books.query))  # Log the generated SQL query for debugging
-
-        # Paginate results
-        paginator = BookPagination()
-        paginated_books = paginator.paginate_queryset(books, request)
-
-        # Serialize the data
-        serializer = BookSerializer(paginated_books, many=True)
-
-        # Return paginated response
-        return paginator.get_paginated_response(serializer.data)
-'''
-# View details of a specific book (requires authentication for full details)
 class BookDetailView(APIView):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
@@ -134,7 +67,6 @@ class BookDetailView(APIView):
         serializer = BookSerializer(book)
         return Response(serializer.data)
 
-# Create a new book listing (requires authentication)
 class CreateBookView(APIView):
 
     permission_classes = [permissions.IsAuthenticated]
@@ -147,31 +79,28 @@ class CreateBookView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-'''class CreateBookView(APIView):
-    permission_classes = [permissions.IsAuthenticated]
-    parser_classes = [MultiPartParser, FormParser]
+# class UserBookListView(APIView):
+#     permission_classes = [permissions.IsAuthenticated]
 
-    def post(self, request):
-        # Pass the request context to the serializer
-        serializer = BookSerializer(data=request.data, context={'request': request})
-        
-        if serializer.is_valid():
-            # Assign the authenticated user as the book owner
-            serializer.save(user=request.user)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)'''
+#     def get(self, request):
+#         books = Book.objects.filter(user=request.user)
+#         serializer = BookSerializer(books, many=True)
+#         return Response(serializer.data)
 
-# List all books created by the authenticated user
+
 class UserBookListView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request):
-        books = Book.objects.filter(user=request.user)
-        serializer = BookSerializer(books, many=True)
-        return Response(serializer.data)
+        books = Book.objects.filter(user=request.user)  # Get books of the logged-in user
+        
+        paginator = UserBookPagination()
+        paginated_books = paginator.paginate_queryset(books, request)  # Apply pagination
 
-# Edit or delete a book owned by the authenticated user
+        serializer = BookSerializer(paginated_books, many=True)  # Serialize paginated results
+        return paginator.get_paginated_response(serializer.data)  # Return paginated response
+
+
 class UserBookDetailView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
