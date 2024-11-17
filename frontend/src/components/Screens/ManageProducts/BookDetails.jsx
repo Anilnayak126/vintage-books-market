@@ -54,7 +54,7 @@ const BookDetails = () => {
 
   return (
     <div className="min-h-screen py-8 text-gray-200">
-      <div className="max-w-6xl mx-auto p-6 bg-gray-800 shadow-xl rounded-lg space-y-8">
+      <div className="max-w-6xl mx-auto p-6 bg-gradient-to-b from-gray-800 to-gray-700 shadow-xl rounded-lg space-y-8">
 
         {/* Back Button */}
         <button
@@ -100,7 +100,7 @@ const BookDetails = () => {
 
         {/* Seller Information */}
         {bookDetails && bookDetails.user && (
-          <div className="p-6 bg-gray-700 rounded-lg shadow-lg mt-8">
+          <div className="p-6 bg-gradient-to-b from-gray-700 to-gray-800 rounded-lg shadow-lg mt-8">
             <h2 className="text-2xl font-semibold text-yellow-400 mb-4">Seller Information</h2>
             <div className="flex flex-col md:flex-row items-center md:space-x-6 space-y-4 md:space-y-0">
               {/* Seller Image */}

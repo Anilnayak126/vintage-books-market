@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import Button from '../../UI/ShopNow';
 
 const HeroSection = () => {
   return (
@@ -31,9 +32,11 @@ const HeroSection = () => {
         </p>
         <Link
           to="/browse"
-          className="mt-6 inline-block px-6 py-3 bg-yellow-500 text-black text-sm sm:text-base font-semibold rounded-lg shadow-lg hover:bg-yellow-400 transition duration-300"
+          
         >
-          Browse the Collection
+          <div className='mt-8 '>
+            <Button/>
+          </div>
         </Link>
       </div>
     </div>

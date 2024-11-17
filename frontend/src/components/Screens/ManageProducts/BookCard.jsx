@@ -24,7 +24,7 @@ const BookCard = React.memo(({ book, isLoading }) => {
 
   // Once data is loaded, render the actual book details
   return (
-    <div className="bg-gray-900 text-gray-200 shadow-lg rounded-lg overflow-hidden transition-transform hover:scale-105">
+    <div className="bg-gradient-to-b from-gray-700 to-gray-800 text-gray-200 shadow-lg rounded-lg overflow-hidden transition-transform hover:scale-105">
       <img
         src={`http://127.0.0.1:8000/manage_p${book.image}`}
         alt={book.title}

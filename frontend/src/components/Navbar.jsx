@@ -22,7 +22,7 @@ const Navbar = () => {
 
   return (
     <motion.nav
-      className="bg-black text-white p-4 shadow-lg sticky top-0 z-50"
+      className="bg-black/60 backdrop-blur-lg text-white p-4 shadow-lg sticky top-0 z-50"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 1 }}
@@ -40,24 +40,32 @@ const Navbar = () => {
         <div className="md:hidden" onClick={toggleMenu}>
           <button className="focus:outline-none">
             <span
-              className={`block w-6 h-1 bg-white mb-1 transition-transform duration-300 ${isOpen ? 'rotate-45 translate-y-2' : ''}`}
+              className={`block w-6 h-1 bg-white mb-1 transition-transform duration-300 ${
+                isOpen ? 'rotate-45 translate-y-2' : ''
+              }`}
             ></span>
             <span
-              className={`block w-6 h-1 bg-white mb-1 transition-opacity duration-300 ${isOpen ? 'opacity-0' : ''}`}
+              className={`block w-6 h-1 bg-white mb-1 transition-opacity duration-300 ${
+                isOpen ? 'opacity-0' : ''
+              }`}
             ></span>
             <span
-              className={`block w-6 h-1 bg-white transition-transform duration-300 ${isOpen ? '-rotate-45 -translate-y-2' : ''}`}
+              className={`block w-6 h-1 bg-white transition-transform duration-300 ${
+                isOpen ? '-rotate-45 -translate-y-2' : ''
+              }`}
             ></span>
           </button>
         </div>
 
         {/* Links and User Section */}
         <div
-          className={`md:flex md:items-center space-y-4 md:space-y-0 md:space-x-6 absolute md:static top-16 left-0 right-0 bg-black md:bg-transparent p-4 md:p-0 transition-all duration-300 ease-in-out ${isOpen ? 'flex flex-col' : 'hidden md:flex'}`}
+          className={`md:flex md:items-center space-y-4 md:space-y-0 md:space-x-6 absolute md:static top-16 left-0 right-0 bg-black/60 md:bg-transparent p-4 md:p-0 backdrop-blur-lg transition-all duration-300 ease-in-out ${
+            isOpen ? 'flex flex-col' : 'hidden md:flex'
+          }`}
         >
           <Link
             to="/"
-            className="px-3 py-2 rounded-md hover:bg-yellow-500 hover:text-black transition-all duration-300 ease-in-out transform hover:scale-105"
+            className="px-3 py-2 rounded-md hover:bg-yellow-500 hover:bg-opacity-30 hover:text-yellow-400 transition-all duration-300 ease-in-out transform hover:scale-105"
             onClick={() => setIsOpen(false)}
           >
             Home
@@ -65,7 +73,7 @@ const Navbar = () => {
 
           <Link
             to="/browse"
-            className="px-3 py-2 rounded-md hover:bg-yellow-500 hover:text-black transition-all duration-300 ease-in-out transform hover:scale-105"
+            className="px-3 py-2 rounded-md hover:bg-yellow-500 hover:bg-opacity-30 hover:text-yellow-400 transition-all duration-300 ease-in-out transform hover:scale-105"
             onClick={() => setIsOpen(false)}
           >
             Browse Books
@@ -73,7 +81,7 @@ const Navbar = () => {
 
           <Link
             to="/sell"
-            className="px-3 py-2 rounded-md hover:bg-yellow-500 hover:text-black transition-all duration-300 ease-in-out transform hover:scale-105"
+            className="px-3 py-2 rounded-md hover:bg-yellow-500 hover:bg-opacity-30 hover:text-yellow-400 transition-all duration-300 ease-in-out transform hover:scale-105"
             onClick={() => setIsOpen(false)}
           >
             Sell a Book
@@ -81,7 +89,7 @@ const Navbar = () => {
 
           <Link
             to="/account"
-            className="px-3 py-2 rounded-md hover:bg-yellow-500 hover:text-black transition-all duration-300 ease-in-out transform hover:scale-105"
+            className="px-3 py-2 rounded-md hover:bg-yellow-500 hover:bg-opacity-30 hover:text-yellow-400 transition-all duration-300 ease-in-out transform hover:scale-105"
             onClick={() => setIsOpen(false)}
           >
             My Account
@@ -89,7 +97,7 @@ const Navbar = () => {
 
           <Link
             to="/cart"
-            className="px-3 py-2 rounded-md hover:bg-yellow-500 hover:text-black transition-all duration-300 ease-in-out transform hover:scale-105"
+            className="px-3 py-2 rounded-md hover:bg-yellow-500 hover:bg-opacity-30 hover:text-yellow-400 transition-all duration-300 ease-in-out transform hover:scale-105"
             onClick={() => setIsOpen(false)}
           >
             Cart
@@ -111,7 +119,7 @@ const Navbar = () => {
                   handleLogout();
                   setIsOpen(false);
                 }}
-                className="px-3 py-2 rounded-md hover:bg-red-500 hover:text-black transition-all duration-300 ease-in-out transform hover:scale-105"
+                className="px-3 py-2 rounded-md hover:bg-red-500 hover:bg-opacity-30 hover:text-red-400 transition-all duration-300 ease-in-out transform hover:scale-105"
               >
                 Logout
               </button>
