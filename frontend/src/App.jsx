@@ -14,6 +14,11 @@ import ChangePassword from './components/Screens/ChangePassword';
 import EditProfile from './components/Screens/EditProfile';
 import BookDetails from './components/Screens/ManageProducts/BookDetails';
 import ManageBook from './components/Screens/ManageProducts/ManageBook';
+import TermsAndConditions from './components/Screens/HomeScreens/TermsAndConditions';
+import PrivacyPolicy from './components/Screens/HomeScreens/PrivacyPolicy';
+
+
+
 
 
 import {Provider} from 'react-redux'
@@ -27,7 +32,7 @@ const App = () => {
     <Provider store={store}>
     <Router>
       <Navbar />
-      <div className="container mx-auto mt-4">
+      
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/browse" element={<BrowseBooks />} />
@@ -40,9 +45,11 @@ const App = () => {
           <Route path='/edit-profile' element={<EditProfile/>}/>
           <Route path="/books/:id" element={<BookDetails/>} />
           <Route path="/manage_books/:id" element={<ManageBook />} />
+          <Route path="/term&C" element={<TermsAndConditions />} />
+          <Route path="/privacy" element={< PrivacyPolicy/>} />
           
         </Routes>
-      </div>
+      
     </Router>
     </Provider>
   );

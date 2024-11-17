@@ -53,9 +53,9 @@ const MyAccount = () => {
     navigate('/change-password');
   };
 
-  if (loading || loadingRedirect) {
-    return <div className="text-gray-200">Loading...</div>;  
-  }
+  // if (loading || loadingRedirect) {
+  //   return <div className="text-gray-200">Loading...</div>;  
+  // }
 
   if (error) {
     return <div className="text-red-500">Error: {error}</div>;

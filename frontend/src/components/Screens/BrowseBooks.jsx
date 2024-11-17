@@ -51,21 +51,21 @@ const BrowseBooks = () => {
             placeholder="Search by title, author, or description"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="border border-gray-300 rounded-lg px-4 py-2 flex-1"
+            className="border border-gray-300 rounded-lg px-4 py-2 flex-1 text-black"
           />
           <input
             type="number"
             placeholder="Min Price"
             value={minPrice}
             onChange={(e) => setMinPrice(e.target.value)}
-            className="border border-gray-300 rounded-lg px-4 py-2 w-32"
+            className="border border-gray-300 rounded-lg px-4 py-2 w-32 text-black"
           />
           <input
             type="number"
             placeholder="Max Price"
             value={maxPrice}
             onChange={(e) => setMaxPrice(e.target.value)}
-            className="border border-gray-300 rounded-lg px-4 py-2 w-32"
+            className="border border-gray-300 rounded-lg px-4 py-2 w-32 text-black"
           />
           <button
             onClick={handleSearch}

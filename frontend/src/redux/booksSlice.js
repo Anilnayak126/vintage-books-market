@@ -87,7 +87,7 @@ export const fetchUserBooks = createAsyncThunk(
 
       return {
         books: response.data.results,
-        totalPages: Math.ceil(response.data.count / 3), 
+        totalPages: Math.ceil(response.data.count / 5), 
         currentPage: page,
       };
     } catch (error) {

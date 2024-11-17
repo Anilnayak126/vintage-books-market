@@ -30,27 +30,26 @@ const MyBooks = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col justify-between text-gray-200 p-6">
+    <div className="min-h-screen flex flex-col justify-between text-gray-200 p-4">
       <div>
-        <h1 className="text-3xl font-bold text-center mb-6 text-white">My Listed Books</h1>
-        <div className="flex flex-col space-y-4">
+        <h1 className="text-2xl font-semibold text-center mb-7 text-yellow-400 ">My Listed Books</h1>
+        <div className="flex flex-col space-y-3">
           {userBooks.length > 0 ? (
             userBooks.map((book, index) => (
               <div
                 key={book.id}
-                className="flex items-center justify-between bg-gray-800 p-4 rounded-lg shadow-md hover:shadow-lg transition duration-300 ease-in-out"
+                className="flex items-center justify-between bg-gray-800 p-3 rounded-lg shadow-md hover:shadow-lg transition duration-300 ease-in-out"
               >
                 <img
                   src={`http://127.0.0.1:8000/manage_p${book.image}`}
                   alt={book.title}
-                  className="w-24 h-36 object-cover rounded-lg mr-4"
+                  className="w-20 h-30 object-cover rounded-lg mr-3"
                 />
                 <div className="flex-1">
                   <div className="flex justify-between mb-1">
                     <h2 className="text-lg font-semibold text-white">{book.title}</h2>
-                    <span className="text-gray-400 font-medium">#{index + 1}</span>
                   </div>
-                  <p className="text-gray-300 text-sm">
+                  <p className="text-gray-300 text-xs">
                     Created At: {new Date(book.created_at).toLocaleDateString()}
                   </p>
                 </div>
@@ -69,7 +68,7 @@ const MyBooks = () => {
       </div>
 
       {/* Pagination */}
-      <div className="flex justify-center mt-6 space-x-1">
+      <div className="flex justify-center mb-10 space-x-1">
         <button
           onClick={() => handlePageChange(page - 1)}
           className="px-3 py-1 bg-gray-700 text-gray-300 rounded-lg hover:bg-blue-500 hover:text-white transition-all duration-300"
