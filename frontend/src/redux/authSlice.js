@@ -224,6 +224,7 @@ export const editProfile = createAsyncThunk(
         },
       };
       const response = await axios.patch('http://127.0.0.1:8000/userDetails/edit-profile/', formData, config);
+      // dispatch(fetchUserProfile());
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data?.detail || 'Profile update failed.');

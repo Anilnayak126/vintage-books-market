@@ -4,6 +4,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { fetchUserProfile } from '../../redux/authSlice';
 import { FaUser, FaHistory, FaBook, FaHeart, FaCog } from 'react-icons/fa';
 import MyBooks from './ManageProducts/MyBooks';
+import MyWishlist from './Wishlist';
 
 const MyAccount = () => {
   const [activeSection, setActiveSection] = useState('profile');
@@ -128,12 +129,12 @@ const MyAccount = () => {
           </div>
         )}
 
-        {activeSection === 'listedBooks' && <MyBooks />} {/* Render the MyBooks component */}
+        {activeSection === 'listedBooks' && <MyBooks />} 
 
         {activeSection === 'wishlist' && (
           <div>
-            <h2 className="text-2xl font-semibold text-yellow-400 mb-4">Wishlist</h2>
-            <p>Your wishlist is empty. <Link to="/browse" className="text-yellow-500">Browse books</Link>.</p>
+            
+            <MyWishlist/>
           </div>
         )}
 

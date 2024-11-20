@@ -47,7 +47,7 @@ class CartView(APIView):
 
 
 
-class WishlistView(APIView):
+'''class WishlistView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
@@ -61,6 +61,46 @@ class WishlistView(APIView):
             book = serializer.validated_data['book']
 
             if book.user == request.user:  
+                return Response(
+                    {"error": "You cannot add your own posted item to the wishlist."},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+
+            wishlist_item, created = WishlistItem.objects.get_or_create(
+                user=request.user,
+                book=book
+            )
+            if not created:
+                return Response({"detail": "Item already in wishlist."}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(WishlistItemSerializer(wishlist_item).data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request):
+        book_id = request.data.get('book_id')
+        if not book_id:
+            return Response({"error": "Book ID is required."}, status=status.HTTP_400_BAD_REQUEST)
+
+        wishlist_item = WishlistItem.objects.filter(user=request.user, book_id=book_id).first()
+        if wishlist_item:
+            wishlist_item.delete()
+            return Response({"detail": "Item removed from wishlist."}, status=status.HTTP_204_NO_CONTENT)
+        return Response({"error": "Item not found."}, status=status.HTTP_404_NOT_FOUND)
+'''
+
+class WishlistView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        wishlist_items = WishlistItem.objects.filter(user=request.user)
+        serializer = WishlistItemSerializer(wishlist_items, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):
+        serializer = WishlistItemSerializer(data=request.data)
+        if serializer.is_valid():
+            book = serializer.validated_data['book']
+
+            if book.user == request.user:
                 return Response(
                     {"error": "You cannot add your own posted item to the wishlist."},
                     status=status.HTTP_400_BAD_REQUEST
