@@ -20,9 +20,9 @@ const MyAccount = () => {
 
   useEffect(() => {
     if (!isAuthenticated && !redirected) {
-      setLoadingRedirect(true);  
-      navigate('/login');
       setRedirected(true); 
+      navigate('/login');
+      setLoadingRedirect(true);  
     } else {
       setLoadingRedirect(false); 
     }

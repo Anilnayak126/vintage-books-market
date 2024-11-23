@@ -79,26 +79,18 @@ class CreateBookView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-# class UserBookListView(APIView):
-#     permission_classes = [permissions.IsAuthenticated]
-
-#     def get(self, request):
-#         books = Book.objects.filter(user=request.user)
-#         serializer = BookSerializer(books, many=True)
-#         return Response(serializer.data)
-
 
 class UserBookListView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request):
-        books = Book.objects.filter(user=request.user)  # Get books of the logged-in user
+        books = Book.objects.filter(user=request.user)  
         
         paginator = UserBookPagination()
-        paginated_books = paginator.paginate_queryset(books, request)  # Apply pagination
+        paginated_books = paginator.paginate_queryset(books, request)  
 
-        serializer = BookSerializer(paginated_books, many=True)  # Serialize paginated results
-        return paginator.get_paginated_response(serializer.data)  # Return paginated response
+        serializer = BookSerializer(paginated_books, many=True) 
+        return paginator.get_paginated_response(serializer.data) 
 
 
 class UserBookDetailView(APIView):

@@ -4,7 +4,12 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 from .models import CartItem, WishlistItem
 from .serializers import CartItemSerializer, WishlistItemSerializer
+from rest_framework.pagination import PageNumberPagination
 
+class  WishListPagination(PageNumberPagination):
+    page_size = 5
+    page_size_query_param= 'page_size'
+    max_page_size = 100
 
 
 class CartView(APIView):
@@ -92,8 +97,10 @@ class WishlistView(APIView):
 
     def get(self, request):
         wishlist_items = WishlistItem.objects.filter(user=request.user)
-        serializer = WishlistItemSerializer(wishlist_items, many=True)
-        return Response(serializer.data)
+        paginator = WishListPagination()
+        paginated_items = paginator.paginate_queryset(wishlist_items,request)
+        serializer = WishlistItemSerializer(paginated_items, many=True)
+        return paginator.get_paginated_response(serializer.data)
 
     def post(self, request):
         serializer = WishlistItemSerializer(data=request.data)
