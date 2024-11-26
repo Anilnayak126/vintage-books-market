@@ -16,6 +16,9 @@ import BookDetails from './components/Screens/ManageProducts/BookDetails';
 import ManageBook from './components/Screens/ManageProducts/ManageBook';
 import TermsAndConditions from './components/Screens/HomeScreens/TermsAndConditions';
 import PrivacyPolicy from './components/Screens/HomeScreens/PrivacyPolicy';
+import PaymentFailed from './components/Screens/PaymentStatus/PaymentFailed';
+import PaymentSuccess from './components/Screens/PaymentStatus/PaymentSuccess';
+
 
 
 
@@ -47,6 +50,9 @@ const App = () => {
           <Route path="/manage_books/:id" element={<ManageBook />} />
           <Route path="/term&C" element={<TermsAndConditions />} />
           <Route path="/privacy" element={< PrivacyPolicy/>} />
+          <Route path="/privacy" element={< PrivacyPolicy/>} />
+          <Route path="/payment-success" element={<PaymentSuccess />} />
+          <Route path="/payment-failed" element={<PaymentFailed />} />
           
         </Routes>
       

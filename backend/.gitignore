@@ -2,3 +2,4 @@ vintage_book
 *__pycache__
 *.txt
 media/
+old_book_sell/settings.py

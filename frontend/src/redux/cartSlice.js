@@ -47,6 +47,19 @@ export const removeFromCart = createAsyncThunk('cart/removeFromCart', async (boo
     }
 });
 
+export const processPayment = createAsyncThunk('cart/processPayment', async (paymentData, { rejectWithValue }) => {
+    try {
+        const token = getAuthToken();
+        const response = await axios.post(`${API_URL}/cart/paypal-payment/`, paymentData, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+        
+        return response.data;
+    } catch (error) {
+        return rejectWithValue(error.response?.data || error.message);
+    }
+});
+
 // Slice
 const cartSlice = createSlice({
     name: 'cart',
@@ -54,6 +67,7 @@ const cartSlice = createSlice({
         items: [],
         status: 'idle',
         error: null,
+        paymentStatus: null,
     },
     reducers: {
         updateQuantity: (state, action) => {
@@ -62,6 +76,9 @@ const cartSlice = createSlice({
             if (item) {
                 item.quantity = quantity;
             }
+        },
+        clearPaymentStatus: (state) => {
+            state.paymentStatus = null;
         },
     },
     extraReducers: (builder) => {
@@ -87,18 +104,18 @@ const cartSlice = createSlice({
                 state.status = 'succeeded';
             })
             .addCase(removeFromCart.fulfilled, (state, action) => {
-                state.items = state.items.filter((item) => item.bookdetails.id !== action.payload);
+                state.items = state.items.filter((item) => item.book.id !== action.payload);
                 state.status = 'succeeded';
             })
-            .addMatcher((action) => action.type.endsWith('/pending'), (state) => {
-                state.status = 'loading';
+            .addCase(processPayment.fulfilled, (state, action) => {
+                state.paymentStatus = 'redirect';
+                state.paymentUrl = action.payload.approval_url; 
             })
-            .addMatcher((action) => action.type.endsWith('/rejected'), (state, action) => {
-                state.error = action.payload;
-                state.status = 'failed';
+            .addCase(processPayment.rejected, (state) => {
+                state.paymentStatus = 'failed';
             });
     },
 });
 
-export const { updateQuantity } = cartSlice.actions;
+export const { updateQuantity, clearPaymentStatus } = cartSlice.actions;
 export default cartSlice.reducer;

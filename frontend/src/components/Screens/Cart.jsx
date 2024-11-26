@@ -1,7 +1,13 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { BsTrash } from 'react-icons/bs';
-import { fetchCartItems, removeFromCart } from '../../redux/cartSlice';
+import {
+    fetchCartItems,
+    removeFromCart,
+    processPayment,
+    clearPaymentStatus,
+} from '../../redux/cartSlice';
+import { useNavigate } from 'react-router-dom';
 
 // Product Component
 const ProductItem = ({ item, onRemove }) => {
@@ -63,7 +69,8 @@ const BillingSummary = ({ items }) => {
 // Main Cart Component
 const Cart = () => {
     const dispatch = useDispatch();
-    const { items, status, error } = useSelector((state) => state.cart);
+    const navigate = useNavigate();
+    const { items, status, error, paymentStatus, paymentUrl } = useSelector((state) => state.cart);
 
     useEffect(() => {
         if (status === 'idle') {
@@ -71,30 +78,62 @@ const Cart = () => {
         }
     }, [dispatch, status]);
 
+    useEffect(() => {
+        if (paymentStatus === 'redirect' && paymentUrl) {
+            // Redirect to PayPal
+            window.location.href = paymentUrl;
+        } else if (paymentStatus === 'failed') {
+            // Redirect to payment failed page
+            navigate('/payment-failed');
+        } else if (paymentStatus === 'succeeded') {
+            // Handle successful payment, if needed
+            navigate('/payment-success');
+        }
+
+        // Cleanup: clear payment status on component unmount
+        return () => {
+            dispatch(clearPaymentStatus());
+        };
+    }, [paymentStatus, paymentUrl, navigate, dispatch]);
+
     const handleRemove = (bookId) => {
         dispatch(removeFromCart(bookId));
     };
 
+    const handleCheckout = () => {
+        dispatch(processPayment({ paymentMethod: 'PayPal' }));
+    };
+
     return (
-        <div className="container mx-auto px-4 py-8 min-h-screen ">
+        <div className="container mx-auto px-4 py-8 min-h-screen">
             <h1 className="text-3xl font-bold text-center mb-8 text-white">Your Shopping Cart</h1>
 
             {status === 'loading' && items.length === 0 && (
                 <p className="text-center text-gray-300">Loading your cart items...</p>
             )}
-            {error && <p className="text-center text-red-400">Error: {error}</p>}
+            {error && <p className="text-center text-red-500">{error}</p>}
+
             {items.length === 0 && status === 'succeeded' && (
                 <p className="text-center text-gray-300">Your cart is empty.</p>
             )}
 
+            {items.map((item) => (
+                <ProductItem
+                    key={item.bookdetails.id}
+                    item={item}
+                    onRemove={handleRemove}
+                />
+            ))}
+
             {items.length > 0 && (
-                <div>
-                    <div className="flex flex-col space-y-4">
-                        {items.map((item) => (
-                            <ProductItem key={item.bookdetails.id} item={item} onRemove={handleRemove} />
-                        ))}
-                    </div>
+                <div className="mt-8">
                     <BillingSummary items={items} />
+                    <button
+                        onClick={handleCheckout}
+                        className="bg-blue-600 text-white py-3 px-6 rounded-lg shadow-md hover:bg-blue-700 w-full"
+                    >
+                        Checkout with PayPal
+                    </button>
                 </div>
             )}
         </div>
