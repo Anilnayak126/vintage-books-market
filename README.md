@@ -22,8 +22,8 @@ This project has been successfully developed with all planned features implement
 - **Buy and Sell Books**:
   - Users can list books for sale with detailed information such as title, author, price, condition, and images.
   - Browse books listed by other users and purchase them securely.
-- **Shopping Cart**:
-  - Add multiple books to a shopping cart.
+- **Shopping Cart & WishList**:
+  - Add multiple books to a shopping cart & in WishList.
   - Review your cart and proceed to checkout for payment.
 - **Search and Filtering**:
   - Advanced filtering options by genre, author, condition, and price range.
