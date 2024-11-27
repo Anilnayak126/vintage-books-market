@@ -1,4 +1,4 @@
-# Vintage Book Market (Ongoing Project)
+# Vintage Book Market
 
 ## Overview
 **Vintage Book Market** is an ongoing web application where users can browse, purchase, and review vintage books. The project is being developed using:
