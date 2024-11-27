@@ -29,6 +29,13 @@ This project has been successfully developed with all planned features implement
   - Advanced filtering options by genre, author, condition, and price range.
   - Search bar for quick discovery of books.
 
+### User Account Management:
+- **Profile Management**:
+  - Users can securely sign up, log in, and log out.
+  - Edit their profile details such as name, email, and profile picture.
+- **Manage Listed Books**:
+  - View, edit, or remove books listed for sale by the user.
+
 ### User Reviews:
 - Leave reviews and rate books after purchase.
 - View aggregate ratings and feedback for all books.
@@ -36,10 +43,6 @@ This project has been successfully developed with all planned features implement
 ### Blogging Platform:
 - Write and publish blogs related to books, authors, and literary genres.
 - Comment on and like blogs written by other users.
-
-### User Authentication:
-- Secure signup, login, and logout.
-- Profile management, including viewing purchase and sales history.
 
 ### Responsive Design:
 - Fully optimized for mobile, tablet, and desktop devices.
