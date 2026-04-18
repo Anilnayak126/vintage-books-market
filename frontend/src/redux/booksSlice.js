@@ -1,7 +1,9 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+import { apiUrl } from "../config/api";
 
-const API_URL = "http://127.0.0.1:8000/manage_p/books/";
+const BOOKS_API_URL = apiUrl("/manage_p/books/");
+const USER_BOOKS_API_URL = apiUrl("/manage_p/user/books/");
 
 // Fetch all books with filters and pagination
 export const fetchBooks = createAsyncThunk(
@@ -14,7 +16,7 @@ export const fetchBooks = createAsyncThunk(
       if (minPrice) params.append("min_price", minPrice);
       if (maxPrice) params.append("max_price", maxPrice);
 
-      const response = await axios.get(`${API_URL}?${params.toString()}`);
+      const response = await axios.get(`${BOOKS_API_URL}?${params.toString()}`);
 
       console.log(response);
       
@@ -41,7 +43,7 @@ export const createBook = createAsyncThunk(
   "books/createBook",
   async (bookData, { rejectWithValue }) => {
     try {
-      const response = await axios.post(`${API_URL}create/`, bookData, {
+      const response = await axios.post(`${BOOKS_API_URL}create/`, bookData, {
         headers: {
           "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
@@ -59,7 +61,7 @@ export const fetchBookById = createAsyncThunk(
   "books/fetchBookById",
   async (id, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`${API_URL}${id}/`, {
+      const response = await axios.get(`${BOOKS_API_URL}${id}/`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
         },
@@ -77,7 +79,7 @@ export const fetchUserBooks = createAsyncThunk(
   async ({ page = 1 }, { rejectWithValue }) => {
     try {
       const response = await axios.get(
-        `http://127.0.0.1:8000/manage_p/user/books/?page=${page}`,
+        `${USER_BOOKS_API_URL}?page=${page}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
@@ -102,7 +104,7 @@ export const updateBook = createAsyncThunk(
   async ({ id, bookData }, { rejectWithValue }) => {
     try {
       const response = await axios.put(
-        `http://127.0.0.1:8000/manage_p/user/books/${id}/`,
+        `${USER_BOOKS_API_URL}${id}/`,
         bookData,
         {
           headers: {
@@ -123,7 +125,7 @@ export const deleteBook = createAsyncThunk(
   "books/deleteBook",
   async (id, { rejectWithValue }) => {
     try {
-      await axios.delete(`http://127.0.0.1:8000/manage_p/user/books/${id}/`, {
+      await axios.delete(`${USER_BOOKS_API_URL}${id}/`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
         },

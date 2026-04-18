@@ -89,7 +89,7 @@ class PayPalPaymentView(APIView):
         response = requests.post(url, headers=headers, json=order_data)
         if response.status_code == 201:
             order = response.json()
-            # Extract the approval URL
+
             approval_url = next(link['href'] for link in order['links'] if link['rel'] == 'approve')
             return {"approval_url": approval_url, "order_id": order["id"]}
         return {"error": response.json()}

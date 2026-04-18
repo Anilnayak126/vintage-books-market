@@ -1,7 +1,8 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
+import { apiUrl } from '../config/api';
 
-const API_URL = 'http://localhost:8000/manage_c';
+const API_URL = apiUrl('/manage_c');
 
 const getAuthToken = () => {
     return localStorage.getItem('accessToken');

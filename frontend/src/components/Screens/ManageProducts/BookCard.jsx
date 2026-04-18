@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Skeleton from 'react-loading-skeleton';  // Import Skeleton for loading state
+import { mediaUrl } from '../../../config/api';
 
 // React.memo prevents unnecessary re-renders
 const BookCard = React.memo(({ book, isLoading }) => {
@@ -26,7 +27,7 @@ const BookCard = React.memo(({ book, isLoading }) => {
   return (
     <div className="bg-gradient-to-b from-gray-700 to-gray-800 text-gray-200 shadow-lg rounded-lg overflow-hidden transition-transform hover:scale-105">
       <img
-        src={`http://127.0.0.1:8000/manage_p${book.image}`}
+        src={mediaUrl('/manage_p', book.image)}
         alt={book.title}
         loading="lazy"  // Lazy load images for performance
         className="w-full h-48 object-cover rounded-t-lg"

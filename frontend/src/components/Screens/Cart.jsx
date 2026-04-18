@@ -8,6 +8,7 @@ import {
     clearPaymentStatus,
 } from '../../redux/cartSlice';
 import { useNavigate } from 'react-router-dom';
+import { mediaUrl } from '../../config/api';
 
 // Product Component
 const ProductItem = ({ item, onRemove }) => {
@@ -17,14 +18,14 @@ const ProductItem = ({ item, onRemove }) => {
     return (
         <div className="flex items-center justify-between bg-gray-700 p-4 rounded-lg shadow-md mb-4">
             <img
-                src={image ? `http://localhost:8000/manage_p${image}` : '/placeholder.png'}
+                src={image ? mediaUrl('/manage_p', image) : '/placeholder.png'}
                 alt={title}
                 className="w-16 h-16 object-cover rounded-md"
             />
             <div className="flex-1 mx-4">
                 <h2 className="text-sm font-bold text-white">{title}</h2>
                 <p className="text-gray-300 text-sm">Author: {author}</p>
-                <p className="text-gray-300 text-sm font-semibold">Price: ₹{price}</p>
+                <p className="text-gray-300 text-sm font-semibold">Price: ${price}</p>
                 <p className="text-gray-400 text-xs">Seller: {user?.first_name} {user?.last_name}</p>
             </div>
             <div className="flex items-center space-x-4">
@@ -53,14 +54,14 @@ const BillingSummary = ({ items }) => {
                 {items.map(({ bookdetails, quantity }) => (
                     <div key={bookdetails.id} className="flex justify-between">
                         <span className="text-gray-300">{bookdetails.title}</span>
-                        <span className="text-gray-200">₹{(bookdetails.price * quantity).toFixed(2)}</span>
+                        <span className="text-gray-200">${(bookdetails.price * quantity).toFixed(2)}</span>
                     </div>
                 ))}
             </div>
             <hr className="my-4 border-gray-500" />
             <div className="flex justify-between text-lg font-bold text-gray-200">
                 <span>Total</span>
-                <span>₹{totalPrice.toFixed(2)}</span>
+                <span>${totalPrice.toFixed(2)}</span>
             </div>
         </div>
     );
@@ -80,17 +81,17 @@ const Cart = () => {
 
     useEffect(() => {
         if (paymentStatus === 'redirect' && paymentUrl) {
-            // Redirect to PayPal
+
             window.location.href = paymentUrl;
         } else if (paymentStatus === 'failed') {
-            // Redirect to payment failed page
+
             navigate('/payment-failed');
         } else if (paymentStatus === 'succeeded') {
-            // Handle successful payment, if needed
+
             navigate('/payment-success');
         }
 
-        // Cleanup: clear payment status on component unmount
+
         return () => {
             dispatch(clearPaymentStatus());
         };
@@ -98,6 +99,8 @@ const Cart = () => {
 
     const handleRemove = (bookId) => {
         dispatch(removeFromCart(bookId));
+
+
     };
 
     const handleCheckout = () => {
@@ -141,3 +144,8 @@ const Cart = () => {
 };
 
 export default Cart;
+
+
+
+
+// hey here is my backend repo i have to add docker and docker compose first in  backenf please make best setuop and add  minio  and postgres and pgadmin and  these things you have to add and get me the  run commands and one more thing that you have to make .env things dynamic for now i have added here in settings.py please  add

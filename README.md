@@ -1,73 +1,71 @@
 # Vintage Book Market
 
 ## Overview
-**Vintage Book Market** is a web application where users can **buy and sell vintage books**, along with browsing and reviewing them. This application combines a marketplace platform with an eCommerce API for smooth transactions and a blogging feature for book enthusiasts. 
+
+**Vintage Book Market** is a web application where users can **buy and sell vintage books**, along with browsing and reviewing them. The project combines a marketplace flow with a Django REST API and a React frontend.
 
 The project is developed using:
-- **Django** and **Django Rest Framework (DRF)** for the backend
-- **React** with **Redux** for state management on the frontend
-- **Tailwind CSS** for responsive and modern styling
 
----
+- **Django** and **Django Rest Framework (DRF)** for the backend
+- **React**, **Vite**, and **Redux** for the frontend
+- **Tailwind CSS** for responsive styling
+- **PostgreSQL** for the Dockerized database
 
 ## Project Status
+
 **Completed**
 
-This project has been successfully developed with all planned features implemented. It includes both eCommerce and blog functionalities for a comprehensive user experience.
-
----
-
 ## Features
-### Marketplace Features:
-- **Buy and Sell Books**:
-  - Users can list books for sale with detailed information such as title, author, price, condition, and images.
-  - Browse books listed by other users and purchase them securely.
-- **Shopping Cart & WishList**:
-  - Add multiple books to a shopping cart & in WishList.
-  - Review your cart and proceed to checkout for payment.
-- **Search and Filtering**:
-  - Advanced filtering options by genre, author, condition, and price range.
-  - Search bar for quick discovery of books.
 
-### User Account Management:
-- **Profile Management**:
-  - Users can securely sign up, log in, and log out.
-  - Edit their profile details such as name, email, and profile picture.
-- **Manage Listed Books**:
-  - View, edit, or remove books listed for sale by the user.
+- Users can list books for sale with title, author, price, condition, and images.
+- Users can browse books listed by other users.
+- Shopping cart and wishlist flows are available.
+- Authentication, profile management, and listed-book management are included.
+- Search and filtering support book discovery.
+- The app is responsive for mobile, tablet, and desktop devices.
 
-### User Reviews:
-- Leave reviews and rate books after purchase.
-- View aggregate ratings and feedback for all books.
+## Run With Docker
 
-### Blogging Platform:
-- Write and publish blogs related to books, authors, and literary genres.
-- Comment on and like blogs written by other users.
+From the repository root:
 
-### Responsive Design:
-- Fully optimized for mobile, tablet, and desktop devices.
+```bash
+docker compose up --build
+```
 
----
+Then open:
 
-## Technologies Used
-- **Backend**: Django, Django Rest Framework (DRF)
-- **Frontend**: React, Redux, Tailwind CSS
-- **Database**: SQLite3 (easily scalable to PostgreSQL for production)
-- **API**: REST API for seamless communication between the backend and frontend
+- Frontend: http://localhost:3000
+- Backend API: http://localhost:8000
+- pgAdmin: http://localhost:8080
 
----
+The frontend calls the backend through `/api`, and Nginx proxies those requests to the Django container.
 
-## Installation Instructions
+## Environment
 
-### Prerequisites:
-- **Python 3.x**
-- **Node.js** and npm (or yarn)
-- **Virtual environment tools** (like `venv` or `virtualenv`)
+Copy the examples before running on a new machine:
 
----
+```bash
+cp .env.example .env
+cp backend/.env.example backend/.env
+cp frontend/.env.example frontend/.env
+```
 
-### Backend Setup (Django + DRF):
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/your-username/vintage-book-market.git
-   cd vintage-book-market/backend
+Keep real secrets in `.env` files only. They are ignored by git and are injected by Docker Compose at runtime.
+
+## Backend Only
+
+From the `backend` folder:
+
+```bash
+docker compose up --build
+```
+
+## Frontend Stack From Frontend Folder
+
+From the `frontend` folder:
+
+```bash
+docker compose up --build
+```
+
+The root compose file is the preferred way to run the full application.

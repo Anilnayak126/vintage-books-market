@@ -2,7 +2,6 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 
 class CustomUser(AbstractUser):
-    # Your custom fields for the user model can go here if any
     pass
 
 class UserProfile(models.Model):

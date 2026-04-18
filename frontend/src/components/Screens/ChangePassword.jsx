@@ -36,7 +36,7 @@ const ChangePassword = () => {
   };
 
   return (
-    <div className="min-h-screen  text-gray-200 p-8 flex justify-center items-center">
+    <div className="min-h-screen text-gray-200 p-8 flex justify-center items-center">
       <div className="w-full max-w-lg bg-gradient-to-b from-gray-800 to-gray-900 p-6 rounded-lg shadow-lg">
         <h1 className="text-3xl font-semibold text-center mb-6 text-white">Change Password</h1>
         <form onSubmit={handleChangePassword}>
@@ -47,6 +47,7 @@ const ChangePassword = () => {
               type="password"
               value={oldPassword}
               onChange={(e) => setOldPassword(e.target.value)}
+              placeholder="Enter your old password"
               className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-black transition-all duration-300"
               required
             />
@@ -57,6 +58,7 @@ const ChangePassword = () => {
               type="password"
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
+              placeholder="Enter your new password"
               className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-black transition-all duration-300"
               required
             />
@@ -67,6 +69,7 @@ const ChangePassword = () => {
               type="password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
+              placeholder="Confirm your new password"
               className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-black transition-all duration-300"
               required
             />

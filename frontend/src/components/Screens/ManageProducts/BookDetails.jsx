@@ -6,6 +6,7 @@ import Skeleton from 'react-loading-skeleton';
 import { FaWhatsapp, FaEnvelope, FaPhone, FaCartPlus, FaArrowLeft, FaClock, FaHeart } from 'react-icons/fa';
 import { addToCart } from '../../../redux/cartSlice';
 import { addToWishlist } from '../../../redux/wishlistSlice';  // Import wishlist action
+import { mediaUrl } from '../../../config/api';
 
 const BookDetails = () => {
   const { id } = useParams();
@@ -16,6 +17,7 @@ const BookDetails = () => {
   const bookDetailsStatus = useSelector((state) => state.books.bookDetailsStatus);
   const bookDetailsError = useSelector((state) => state.books.bookDetailsError);
   const isAuthenticated = Boolean(localStorage.getItem('accessToken'));
+  const loggedInUser = useSelector((state) => state.auth.user); // Assuming user info is stored in redux after login
 
   const [redirected, setRedirected] = useState(false);
   const [quantity, setQuantity] = useState(1);
@@ -35,14 +37,27 @@ const BookDetails = () => {
 
   const handleAddToCart = () => {
     if (bookDetails) {
+
+      if (loggedInUser?.id === bookDetails.user?.id) {
+        alert(`Hello ${loggedInUser.first_name} You cannot add your own book to the cart!`);
+        return;
+      }
       dispatch(addToCart({ book: bookDetails.id, quantity }));
       navigate('/cart');
     }
   };
 
   const handleAddToWishlist = () => {
-    if (bookDetails) {
-      dispatch(addToWishlist(bookDetails.id)); // Dispatch to wishlist
+    if (loggedInUser?.id === bookDetails.user?.id) {
+      alert(`Hello ${loggedInUser.first_name} You cannot add your own book to the WishList!`);
+      return;
+    }
+    else{
+      if (bookDetails){
+
+        dispatch(addToWishlist(bookDetails.id));
+      }
+
     }
   };
 
@@ -87,7 +102,7 @@ const BookDetails = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Book Image */}
             <img
-              src={`http://127.0.0.1:8000/manage_p${bookDetails?.image || ''}`}
+              src={mediaUrl('/manage_p', bookDetails?.image)}
               alt={bookDetails?.title || 'Book Image'}
               className="w-full h-96 object-cover rounded-lg shadow-lg"
               onError={(e) => { e.target.src = '/fallback-image.jpg'; }}
@@ -146,7 +161,7 @@ const BookDetails = () => {
             <h2 className="text-2xl font-semibold text-yellow-400 mb-4">Seller Information</h2>
             <div className="flex flex-col md:flex-row items-center md:space-x-6 space-y-4 md:space-y-0">
               <img
-                src={`http://127.0.0.1:8000/userDetails${bookDetails.user.user_profile?.profile_image || ''}`}
+                src={mediaUrl('/userDetails', bookDetails.user.user_profile?.profile_image)}
                 alt="User Profile"
                 className="w-24 h-24 rounded-full border-2 border-yellow-400 shadow-md"
                 onError={(e) => { e.target.src = '/fallback-profile.jpg'; }}
@@ -179,6 +194,7 @@ const BookDetails = () => {
             </div>
           </div>
         )}
+
       </div>
     </div>
   );

@@ -1,0 +1,12 @@
+Django==5.1.2
+djangorestframework
+djangorestframework-simplejwt
+psycopg2-binary
+python-decouple
+python-dotenv
+django-cors-headers
+django-filter
+gunicorn
+requests
+paypalrestsdk
+Pillow

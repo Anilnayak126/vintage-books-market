@@ -5,6 +5,7 @@ import { fetchUserProfile } from '../../redux/authSlice';
 import { FaUser, FaHistory, FaBook, FaHeart, FaCog } from 'react-icons/fa';
 import MyBooks from './ManageProducts/MyBooks';
 import MyWishlist from './Wishlist';
+import { mediaUrl } from '../../config/api';
 
 const MyAccount = () => {
   const [activeSection, setActiveSection] = useState('profile');
@@ -14,23 +15,23 @@ const MyAccount = () => {
   const navigate = useNavigate();
 
   const isAuthenticated = Boolean(localStorage.getItem('accessToken'));
-  
+
   const [redirected, setRedirected] = useState(false);
   const [loadingRedirect, setLoadingRedirect] = useState(true); // Add a state to handle redirection loading
 
   useEffect(() => {
     if (!isAuthenticated && !redirected) {
-      setRedirected(true); 
+      setRedirected(true);
       navigate('/login');
-      setLoadingRedirect(true);  
+      setLoadingRedirect(true);
     } else {
-      setLoadingRedirect(false); 
+      setLoadingRedirect(false);
     }
   }, [isAuthenticated, navigate, redirected]);
 
 
   useEffect(() => {
-    if (!loadingRedirect) { 
+    if (!loadingRedirect) {
       dispatch(fetchUserProfile());
     }
   }, [dispatch, location.key, loadingRedirect]);
@@ -55,7 +56,7 @@ const MyAccount = () => {
   };
 
   // if (loading || loadingRedirect) {
-  //   return <div className="text-gray-200">Loading...</div>;  
+  //   return <div className="text-gray-200">Loading...</div>;
   // }
 
   if (error) {
@@ -66,7 +67,7 @@ const MyAccount = () => {
     <div className="min-h-screen text-gray-200 p-8 flex flex-col md:flex-row md:space-x-8">
       <aside className="w-full md:w-1/4 bg-gray-800 p-4 rounded-lg mb-6 md:mb-0">
         <ul className="space-y-4">
-          <li 
+          <li
             onClick={() => setActiveSection('profile')}
             className={`flex items-center cursor-pointer p-3 rounded-lg transition-all duration-300 ${
               activeSection === 'profile' ? 'bg-yellow-500 text-black' : 'hover:bg-yellow-500 hover:text-black'
@@ -74,15 +75,8 @@ const MyAccount = () => {
           >
             <FaUser className="mr-3" /> Profile Information
           </li>
-          <li 
-            onClick={() => setActiveSection('orders')}
-            className={`flex items-center cursor-pointer p-3 rounded-lg transition-all duration-300 ${
-              activeSection === 'orders' ? 'bg-yellow-500 text-black' : 'hover:bg-yellow-500 hover:text-black'
-            }`}
-          >
-            <FaHistory className="mr-3" /> Order History
-          </li>
-          <li 
+
+          <li
             onClick={() => setActiveSection('listedBooks')}
             className={`flex items-center cursor-pointer p-3 rounded-lg transition-all duration-300 ${
               activeSection === 'listedBooks' ? 'bg-yellow-500 text-black' : 'hover:bg-yellow-500 hover:text-black'
@@ -90,7 +84,7 @@ const MyAccount = () => {
           >
             <FaBook className="mr-3" /> Listed Books
           </li>
-          <li 
+          <li
             onClick={() => setActiveSection('wishlist')}
             className={`flex items-center cursor-pointer p-3 rounded-lg transition-all duration-300 ${
               activeSection === 'wishlist' ? 'bg-yellow-500 text-black' : 'hover:bg-yellow-500 hover:text-black'
@@ -98,7 +92,7 @@ const MyAccount = () => {
           >
             <FaHeart className="mr-3" /> Wishlist
           </li>
-          <li 
+          <li
             onClick={() => setActiveSection('settings')}
             className={`flex items-center cursor-pointer p-3 rounded-lg transition-all duration-300 ${
               activeSection === 'settings' ? 'bg-yellow-500 text-black' : 'hover:bg-yellow-500 hover:text-black'
@@ -113,7 +107,7 @@ const MyAccount = () => {
         {activeSection === 'profile' && user && (
           <div>
             <h2 className="text-2xl font-semibold text-yellow-400 mb-4">Profile Information</h2>
-            <img src={`http://127.0.0.1:8000/userDetails${user.user_profile.profile_image}`} alt="Profile" className="w-24 h-24 rounded-full mb-4 shadow-md border-2 border-yellow-400" />
+            <img src={mediaUrl('/userDetails', user.user_profile.profile_image)} alt="Profile" className="w-24 h-24 rounded-full mb-4 shadow-md border-2 border-yellow-400" />
             <p><strong>Name:</strong> {user.first_name} {user.last_name}</p>
             <p><strong>Email:</strong> {user.email}</p>
             <p><strong>Phone:</strong> {user.user_profile.phone_number}</p>
@@ -129,11 +123,11 @@ const MyAccount = () => {
           </div>
         )}
 
-        {activeSection === 'listedBooks' && <MyBooks />} 
+        {activeSection === 'listedBooks' && <MyBooks />}
 
         {activeSection === 'wishlist' && (
           <div>
-            
+
             <MyWishlist/>
           </div>
         )}

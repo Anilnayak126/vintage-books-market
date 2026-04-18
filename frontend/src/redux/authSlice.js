@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
+import { apiUrl } from '../config/api';
 
 const initialState = {
   user: JSON.parse(localStorage.getItem('user')) || null,
@@ -13,7 +14,7 @@ const initialState = {
 // Helper function to refresh access token
 const refreshAccessToken = async (refreshToken) => {
   try {
-    const response = await axios.post('http://127.0.0.1:8000/userDetails/token/refresh/', {
+    const response = await axios.post(apiUrl('/userDetails/token/refresh/'), {
       refresh: refreshToken,
     });
     const newAccessToken = response.data.access;
@@ -114,7 +115,7 @@ export const changePassword = createAsyncThunk(
       }
 
       const response = await axios.post(
-        'http://127.0.0.1:8000/userDetails/change-password/',
+        apiUrl('/userDetails/change-password/'),
         {
           old_password: oldPassword,
           new_password: newPassword,
@@ -137,7 +138,7 @@ export const changePassword = createAsyncThunk(
 // Other async actions
 export const login = (credentials) => async (dispatch) => {
   try {
-    const response = await axios.post('http://127.0.0.1:8000/userDetails/login/', credentials);
+    const response = await axios.post(apiUrl('/userDetails/login/'), credentials);
     dispatch(loginSuccess(response.data));
   } catch (err) {
     dispatch(loginFailure(err.response?.data?.message || 'Login failed.'));
@@ -147,7 +148,7 @@ export const login = (credentials) => async (dispatch) => {
 
 export const register = (userData) => async (dispatch) => {
   try {
-    await axios.post('http://127.0.0.1:8000/userDetails/register/', userData);
+    await axios.post(apiUrl('/userDetails/register/'), userData);
     dispatch(registerSuccess());
   } catch (error) {
     dispatch(registerFailure(error.response.data.detail || 'Registration failed.'));
@@ -157,7 +158,7 @@ export const register = (userData) => async (dispatch) => {
 // Logout action
 export const logoutUser = () => (dispatch) => {
   axios
-    .post('http://127.0.0.1:8000/userDetails/logout/', {
+    .post(apiUrl('/userDetails/logout/'), {
       refresh_token: localStorage.getItem('refreshToken'),
     })
     .then(() => {
@@ -184,7 +185,7 @@ export const fetchUserProfile = createAsyncThunk(
         }
       }
 
-      const response = await axios.get('http://127.0.0.1:8000/userDetails/profile/', {
+      const response = await axios.get(apiUrl('/userDetails/profile/'), {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -223,7 +224,7 @@ export const editProfile = createAsyncThunk(
           'Content-Type': 'multipart/form-data',
         },
       };
-      const response = await axios.patch('http://127.0.0.1:8000/userDetails/edit-profile/', formData, config);
+      const response = await axios.patch(apiUrl('/userDetails/edit-profile/'), formData, config);
       // dispatch(fetchUserProfile());
       return response.data;
     } catch (error) {

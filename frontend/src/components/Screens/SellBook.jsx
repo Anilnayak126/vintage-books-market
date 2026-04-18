@@ -55,6 +55,7 @@ const SellBook = () => {
               name="title"
               value={formData.title}
               onChange={handleChange}
+              placeholder="Enter book title"
               className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-black transition-all duration-300"
               required
             />
@@ -66,6 +67,7 @@ const SellBook = () => {
               name="author"
               value={formData.author}
               onChange={handleChange}
+              placeholder="Enter author's name"
               className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-black transition-all duration-300"
               required
             />
@@ -76,6 +78,7 @@ const SellBook = () => {
               name="description"
               value={formData.description}
               onChange={handleChange}
+              placeholder="Enter book description"
               className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-black transition-all duration-300"
               required
             />
@@ -87,6 +90,7 @@ const SellBook = () => {
               name="price"
               value={formData.price}
               onChange={handleChange}
+              placeholder="Enter book price"
               className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-black transition-all duration-300"
               required
             />

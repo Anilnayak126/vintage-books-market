@@ -6,7 +6,6 @@ from rest_framework.parsers import MultiPartParser, FormParser
 from .serializers import UserSerializer, LoginSerializer, ChangePasswordSerializer,EditUserProfileSerializer
 from .models import UserProfile, CustomUser
 from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework_simplejwt.tokens import RefreshToken
 import logging
 
 logger = logging.getLogger(__name__)

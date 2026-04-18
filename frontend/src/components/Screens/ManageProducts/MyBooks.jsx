@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUserBooks } from "../../../redux/booksSlice";
 import { useNavigate } from "react-router-dom";
+import { mediaUrl } from "../../../config/api";
 
 const MyBooks = () => {
   const dispatch = useDispatch();
@@ -41,7 +42,7 @@ const MyBooks = () => {
                 className="flex items-center justify-between bg-gray-800 p-3 rounded-lg shadow-md hover:shadow-lg transition duration-300 ease-in-out"
               >
                 <img
-                  src={`http://127.0.0.1:8000/manage_p${book.image}`}
+                  src={mediaUrl('/manage_p', book.image)}
                   alt={book.title}
                   className="w-20 h-30 object-cover rounded-lg mr-3"
                 />
