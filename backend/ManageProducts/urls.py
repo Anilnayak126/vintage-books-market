@@ -15,5 +15,5 @@ urlpatterns = [
     path('user/books/<int:pk>/', UserBookDetailView.as_view(), name='user-book-detail'), 
 ]
 
-if settings.DEBUG:
+if settings.DEBUG and not settings.OBJECT_STORAGE_ENABLED:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

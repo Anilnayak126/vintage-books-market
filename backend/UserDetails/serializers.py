@@ -4,54 +4,89 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
 from rest_framework.exceptions import ValidationError
 from django.contrib.auth import password_validation
-from rest_framework.serializers import ImageField
+from old_book_sell.api_fields import StoredFileKeyField, StoredImageField
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
-    profile_image = ImageField(max_length=None, use_url=True, required=False)
+    profile_image = StoredImageField(required=False, allow_null=True)
+    profile_image_key = StoredFileKeyField(source='profile_image', read_only=True)
 
     class Meta:
         model = UserProfile
-        fields = ['phone_number', 'address', 'profile_image']
+        fields = ['phone_number', 'address', 'profile_image', 'profile_image_key']
 
 
 class UserSerializer(serializers.ModelSerializer):
-    user_profile = UserProfileSerializer(required=False)
+    user_profile = UserProfileSerializer(read_only=True)
+    phone_number = serializers.CharField(write_only=True, required=False, allow_blank=True, allow_null=True)
+    address = serializers.CharField(write_only=True, required=False, allow_blank=True, allow_null=True)
+    profile_image = StoredImageField(write_only=True, required=False, allow_null=True)
 
     class Meta:
         model = CustomUser
-        fields = ['id', 'username', 'email', 'first_name', 'last_name', 'password', 'user_profile']
+        fields = [
+            'id',
+            'username',
+            'email',
+            'first_name',
+            'last_name',
+            'password',
+            'user_profile',
+            'phone_number',
+            'address',
+            'profile_image',
+        ]
         extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):
-        profile_data = validated_data.pop('user_profile', None)
+        phone_number = validated_data.pop('phone_number', '')
+        address = validated_data.pop('address', '')
+        profile_image = validated_data.pop('profile_image', None)
         user = CustomUser.objects.create_user(**validated_data)
-        
-        if profile_data:
-            UserProfile.objects.create(user=user, **profile_data)
+
+        UserProfile.objects.create(
+            user=user,
+            phone_number=phone_number,
+            address=address,
+            profile_image=profile_image,
+        )
 
         return user
 
 
 class EditUserProfileSerializer(serializers.ModelSerializer):
-    profile_image = ImageField(max_length=None, use_url=True, required=False)
+    phone_number = serializers.CharField(required=False, allow_blank=True, allow_null=True)
+    address = serializers.CharField(required=False, allow_blank=True, allow_null=True)
+    profile_image = serializers.ImageField(required=False, allow_null=True)
 
     class Meta:
         model = CustomUser
-        fields = ['first_name', 'last_name', 'email', 'profile_image']  # include other fields as needed
+        fields = ['first_name', 'last_name', 'email', 'phone_number', 'address', 'profile_image']
 
     def update(self, instance, validated_data):
-        # Update user fields
+        phone_number = validated_data.pop('phone_number', None)
+        address = validated_data.pop('address', None)
+        profile_image = validated_data.pop('profile_image', None)
+
         instance.first_name = validated_data.get('first_name', instance.first_name)
         instance.last_name = validated_data.get('last_name', instance.last_name)
         instance.email = validated_data.get('email', instance.email)
-        
-        # Update profile image if provided
-        profile_image = validated_data.get('profile_image')
-        if profile_image:
-            instance.user_profile.profile_image = profile_image
-            instance.user_profile.save()
         instance.save()
+
+        profile, _ = UserProfile.objects.get_or_create(user=instance)
+
+        if phone_number is not None:
+            profile.phone_number = phone_number
+
+        if address is not None:
+            profile.address = address
+
+        if profile_image is not None:
+            if profile.profile_image:
+                profile.profile_image.delete(save=False)
+            profile.profile_image = profile_image
+
+        profile.save()
         return instance
 
 
@@ -65,7 +100,7 @@ class LoginSerializer(serializers.Serializer):
             raise serializers.ValidationError("Invalid login credentials")
 
         refresh = RefreshToken.for_user(user)
-        user_data = UserSerializer(user).data
+        user_data = UserSerializer(user, context=self.context).data
         return {
             'access': str(refresh.access_token),
             'refresh': str(refresh),
