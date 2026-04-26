@@ -13,7 +13,7 @@
 
 # Backend
 
-This folder contains the Django REST Framework backend for Vintage Book Market. It handles authentication, user profiles, book listings, cart items, wishlist items, media uploads, and PayPal sandbox order creation.
+This folder contains the Django REST Framework backend for Vintage Book Market. It handles authentication, user profiles, book listings, cart items, wishlist items, MinIO-backed media uploads, and PayPal sandbox order creation.
 
 ## Backend Stack
 
@@ -26,7 +26,7 @@ This folder contains the Django REST Framework backend for Vintage Book Market. 
 | Runtime | Gunicorn |
 | CORS | `django-cors-headers` |
 | Config | `python-dotenv` and runtime environment variables |
-| Media | Django `ImageField` with mounted `/app/media` |
+| Media | Django `ImageField` backed by MinIO object storage with presigned URLs |
 | Payments | PayPal sandbox API via server-side credentials |
 
 ## Apps
@@ -53,6 +53,7 @@ Backend services:
 | Django API | http://localhost:8000 |
 | Django admin | http://localhost:8000/admin |
 | PostgreSQL | `localhost:5432` |
+| MinIO API | http://localhost:9000 |
 | pgAdmin | http://localhost:8080 |
 | MinIO console | http://localhost:9001 |
 
@@ -83,11 +84,26 @@ Keep real values in `.env` only. The `.env` file is ignored by git.
 | `DB_PASSWORD` | `postgres` | PostgreSQL password |
 | `DB_HOST` | `postgres` | Database host inside Docker |
 | `DB_PORT` | `5432` | Database port |
-| `MEDIA_ROOT` | `/app/media` | Container path for uploaded media |
+| `MEDIA_ROOT` | `/app/media` | Local fallback media path when object storage is disabled |
 | `STATIC_ROOT` | `/app/staticfiles` | Container path for collected static files |
+| `OBJECT_STORAGE_ENABLED` | `True` | Toggle MinIO-backed object storage |
+| `MINIO_ENDPOINT` | `http://minio:9000` | Internal MinIO endpoint used by the backend |
+| `MINIO_PUBLIC_ENDPOINT` | `http://localhost:9000` | Public endpoint used for browser presigned URLs |
+| `MINIO_ACCESS_KEY` | `minioadmin` | MinIO access key |
+| `MINIO_SECRET_KEY` | `minioadmin` | MinIO secret key |
+| `MINIO_BUCKET_NAME` | `vintage-books-media` | Bucket that stores book and profile images |
 | `CORS_ALLOWED_ORIGINS` | `http://localhost:3000,http://localhost:5173` | Allowed browser origins |
 | `PAYPAL_CLIENT_ID` | sandbox client id | PayPal sandbox client id |
 | `PAYPAL_CLIENT_SECRET` | sandbox secret | PayPal sandbox secret |
+
+## Media Storage Behavior
+
+- Uploaded book images and profile images are stored as private objects in MinIO.
+- The database stores only the object key, for example `book_images/cover.png`.
+- API responses include both:
+  - `image` or `profile_image`: a presigned URL for direct browser access
+  - `image_key` or `profile_image_key`: the stored object key
+- The backend creates the configured bucket at startup with `python manage.py ensure_storage_bucket`.
 
 ## API Endpoint Reference
 
@@ -147,6 +163,7 @@ The frontend uses these endpoints through `/api/...` in Docker. Direct backend U
 | Start backend stack | `docker compose up --build` |
 | Start in background | `docker compose up --build -d` |
 | Show backend logs | `docker compose logs -f backend` |
+| Ensure storage bucket exists | `docker compose exec backend python manage.py ensure_storage_bucket` |
 | Run migrations | `docker compose exec backend python manage.py migrate` |
 | Create superuser | `docker compose exec backend python manage.py createsuperuser` |
 | Open Django shell | `docker compose exec backend python manage.py shell` |
@@ -182,4 +199,4 @@ The current backend uses PayPal sandbox URLs. Switch to production URLs and prod
 - Do not commit PayPal secrets.
 - Keep `DEBUG=False` in production.
 - Rotate any credentials that were ever pushed publicly.
-- Keep uploaded media and local database files out of git.
+- Keep uploaded media, MinIO data, and local database files out of git.

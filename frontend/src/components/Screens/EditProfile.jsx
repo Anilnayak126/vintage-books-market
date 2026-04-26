@@ -59,12 +59,15 @@ const EditProfile = () => {
 
     try {
       const formData = new FormData();
-      for (let key in profileData) {
-        formData.append(key, profileData[key]);
+      for (const [key, value] of Object.entries(profileData)) {
+        if (key === 'profile_image' && !value) {
+          continue;
+        }
+        formData.append(key, value);
       }
       await dispatch(editProfile(formData)).unwrap();
       setSuccessMessage('Profile updated successfully!');
-      dispatch(fetchUserProfile());
+      await dispatch(fetchUserProfile()).unwrap();
       navigate('/account');
     } catch (err) {
       setError('An error occurred while updating the profile');

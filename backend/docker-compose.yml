@@ -46,8 +46,16 @@ services:
       - .env
     environment:
       DB_HOST: postgres
+      OBJECT_STORAGE_ENABLED: ${OBJECT_STORAGE_ENABLED:-true}
+      MINIO_ENDPOINT: ${MINIO_ENDPOINT:-http://minio:9000}
+      MINIO_PUBLIC_ENDPOINT: ${MINIO_PUBLIC_ENDPOINT:-http://localhost:9000}
+      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY:-minioadmin}
+      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY:-minioadmin}
+      MINIO_BUCKET_NAME: ${MINIO_BUCKET_NAME:-vintage-books-media}
+      MINIO_REGION_NAME: ${MINIO_REGION_NAME:-us-east-1}
     command: >
-      sh -c "python manage.py migrate &&
+      sh -c "python manage.py ensure_storage_bucket &&
+             python manage.py migrate &&
              python manage.py collectstatic --noinput &&
              gunicorn --bind 0.0.0.0:8000 old_book_sell.wsgi:application"
     volumes:
@@ -58,6 +66,8 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+      minio:
+        condition: service_started
 
 volumes:
   postgres_data:

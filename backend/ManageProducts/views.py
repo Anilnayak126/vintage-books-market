@@ -50,7 +50,7 @@ class BookListView(APIView):
         paginator = BookPagination()
         paginated_books = paginator.paginate_queryset(books, request)
         
-        serializer = BookSerializer(paginated_books, many=True)
+        serializer = BookSerializer(paginated_books, many=True, context={'request': request})
         
         return paginator.get_paginated_response(serializer.data)
 
@@ -64,7 +64,7 @@ class BookDetailView(APIView):
         except Book.DoesNotExist:
             return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
 
-        serializer = BookSerializer(book)
+        serializer = BookSerializer(book, context={'request': request})
         return Response(serializer.data)
 
 class CreateBookView(APIView):
@@ -73,7 +73,7 @@ class CreateBookView(APIView):
     parser_classes = [MultiPartParser, FormParser]
 
     def post(self, request):
-        serializer = BookSerializer(data=request.data)
+        serializer = BookSerializer(data=request.data, context={'request': request})
         if serializer.is_valid():
             serializer.save(user=request.user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -89,7 +89,7 @@ class UserBookListView(APIView):
         paginator = UserBookPagination()
         paginated_books = paginator.paginate_queryset(books, request)  
 
-        serializer = BookSerializer(paginated_books, many=True) 
+        serializer = BookSerializer(paginated_books, many=True, context={'request': request}) 
         return paginator.get_paginated_response(serializer.data) 
 
 
@@ -107,7 +107,7 @@ class UserBookDetailView(APIView):
         if not book:
             return Response({"detail": "Not found or you do not have permission."}, status=status.HTTP_404_NOT_FOUND)
         
-        serializer = BookSerializer(book)
+        serializer = BookSerializer(book, context={'request': request})
         return Response(serializer.data)
 
     def put(self, request, pk):
@@ -115,7 +115,7 @@ class UserBookDetailView(APIView):
         if not book:
             return Response({"detail": "Not found or you do not have permission."}, status=status.HTTP_404_NOT_FOUND)
 
-        serializer = BookSerializer(book, data=request.data, partial=True)
+        serializer = BookSerializer(book, data=request.data, partial=True, context={'request': request})
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
