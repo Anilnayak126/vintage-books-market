@@ -38,9 +38,9 @@ export const addToCart = createAsyncThunk('cart/addToCart', async (item, { dispa
 export const removeFromCart = createAsyncThunk('cart/removeFromCart', async (bookId, { rejectWithValue }) => {
     try {
         const token = getAuthToken();
-        await axios.delete(`${API_URL}/cart/delete/`, {
+        await axios.delete(`${API_URL}/cart/`, {
             headers: { Authorization: `Bearer ${token}` },
-            data: { book_id: bookId },
+            params: { book_id: bookId },
         });
         return bookId;
     } catch (error) {
@@ -105,7 +105,9 @@ const cartSlice = createSlice({
                 state.status = 'succeeded';
             })
             .addCase(removeFromCart.fulfilled, (state, action) => {
-                state.items = state.items.filter((item) => item.book.id !== action.payload);
+                state.items = state.items.filter(
+                    (item) => item.book !== action.payload && item.bookdetails?.id !== action.payload
+                );
                 state.status = 'succeeded';
             })
             .addCase(processPayment.fulfilled, (state, action) => {

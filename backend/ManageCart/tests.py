@@ -52,3 +52,9 @@ class CartStorageTests(TestCase):
             payload['image'],
             'http://localhost:9000/vintage-books-media/book_images/cart-fixture.jpg?signature=test',
         )
+
+    def test_cart_delete_accepts_book_id_query_param(self):
+        response = self.client.delete(f'/manage_c/cart/?book_id={self.book.id}')
+
+        self.assertEqual(response.status_code, 204)
+        self.assertFalse(CartItem.objects.filter(user=self.buyer, book=self.book).exists())

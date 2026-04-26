@@ -44,7 +44,7 @@ class CartView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request):
-        book_id = request.data.get('book_id')
+        book_id = request.query_params.get('book_id') or request.data.get('book_id')
         if not book_id:
             return Response({"error": "Book ID is required."}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -142,7 +142,7 @@ class WishlistView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request):
-        book_id = request.data.get('book_id')
+        book_id = request.query_params.get('book_id') or request.data.get('book_id')
         if not book_id:
             return Response({"error": "Book ID is required."}, status=status.HTTP_400_BAD_REQUEST)
 
