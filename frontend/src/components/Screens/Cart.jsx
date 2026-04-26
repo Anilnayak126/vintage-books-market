@@ -16,23 +16,24 @@ const ProductItem = ({ item, onRemove }) => {
     const { id, title, author, price, image, user } = bookdetails;
 
     return (
-        <div className="flex items-center justify-between bg-gray-700 p-4 rounded-lg shadow-md mb-4">
+        <div className="glass-list-item mb-4 flex flex-col gap-4 p-4 sm:flex-row sm:items-center sm:justify-between">
             <img
                 src={image ? mediaUrl('/manage_p', image) : '/placeholder.png'}
                 alt={title}
-                className="w-16 h-16 object-cover rounded-md"
+                className="h-20 w-20 object-cover"
             />
-            <div className="flex-1 mx-4">
+            <div className="flex-1">
                 <h2 className="text-sm font-bold text-white">{title}</h2>
-                <p className="text-gray-300 text-sm">Author: {author}</p>
-                <p className="text-gray-300 text-sm font-semibold">Price: ${price}</p>
-                <p className="text-gray-400 text-xs">Seller: {user?.first_name} {user?.last_name}</p>
+                <p className="muted-copy text-sm">Author: {author}</p>
+                <p className="text-sm font-semibold text-white">Price: ${price}</p>
+                <p className="muted-copy text-xs">Seller: {user?.first_name} {user?.last_name}</p>
             </div>
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center gap-4">
                 <span className="text-gray-200 font-semibold">Qty: {quantity}</span>
                 <button
                     onClick={() => onRemove(id)}
-                    className="text-red-400 hover:text-red-500"
+                    className="danger-button p-3"
+                    aria-label={`Remove ${title}`}
                 >
                     <BsTrash size={20} />
                 </button>
@@ -48,12 +49,12 @@ const BillingSummary = ({ items }) => {
     }, 0);
 
     return (
-        <div className="bg-gray-700 p-4 rounded-lg shadow-md mt-8">
+        <div className="glass-panel mt-8 p-5">
             <h2 className="text-xl font-bold text-white mb-4">Billing Summary</h2>
             <div className="space-y-2">
                 {items.map(({ bookdetails, quantity }) => (
                     <div key={bookdetails.id} className="flex justify-between">
-                        <span className="text-gray-300">{bookdetails.title}</span>
+                        <span className="muted-copy">{bookdetails.title}</span>
                         <span className="text-gray-200">${(bookdetails.price * quantity).toFixed(2)}</span>
                     </div>
                 ))}
@@ -108,44 +109,41 @@ const Cart = () => {
     };
 
     return (
-        <div className="container mx-auto px-4 py-8 min-h-screen">
-            <h1 className="text-3xl font-bold text-center mb-8 text-white">Your Shopping Cart</h1>
+        <div className="glass-page">
+            <div className="page-container">
+                <h1 className="section-title mb-8 text-center text-3xl">Your Shopping Cart</h1>
 
-            {status === 'loading' && items.length === 0 && (
-                <p className="text-center text-gray-300">Loading your cart items...</p>
-            )}
-            {error && <p className="text-center text-red-500">{error}</p>}
+                {status === 'loading' && items.length === 0 && (
+                    <p className="status-panel text-center muted-copy">Loading your cart items...</p>
+                )}
+                {error && <p className="status-panel text-center text-[color:var(--rose)]">{error}</p>}
 
-            {items.length === 0 && status === 'succeeded' && (
-                <p className="text-center text-gray-300">Your cart is empty.</p>
-            )}
+                {items.length === 0 && status === 'succeeded' && (
+                    <p className="status-panel text-center muted-copy">Your cart is empty.</p>
+                )}
 
-            {items.map((item) => (
-                <ProductItem
-                    key={item.bookdetails.id}
-                    item={item}
-                    onRemove={handleRemove}
-                />
-            ))}
+                {items.map((item) => (
+                    <ProductItem
+                        key={item.bookdetails.id}
+                        item={item}
+                        onRemove={handleRemove}
+                    />
+                ))}
 
-            {items.length > 0 && (
-                <div className="mt-8">
-                    <BillingSummary items={items} />
-                    <button
-                        onClick={handleCheckout}
-                        className="bg-blue-600 text-white py-3 px-6 rounded-lg shadow-md hover:bg-blue-700 w-full"
-                    >
-                        Checkout with PayPal
-                    </button>
-                </div>
-            )}
+                {items.length > 0 && (
+                    <div className="mt-8">
+                        <BillingSummary items={items} />
+                        <button
+                            onClick={handleCheckout}
+                            className="mt-5 w-full px-6 py-3 font-bold"
+                        >
+                            Checkout with PayPal
+                        </button>
+                    </div>
+                )}
+            </div>
         </div>
     );
 };
 
 export default Cart;
-
-
-
-
-// hey here is my backend repo i have to add docker and docker compose first in  backenf please make best setuop and add  minio  and postgres and pgadmin and  these things you have to add and get me the  run commands and one more thing that you have to make .env things dynamic for now i have added here in settings.py please  add

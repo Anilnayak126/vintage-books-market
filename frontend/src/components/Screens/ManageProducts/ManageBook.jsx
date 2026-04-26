@@ -42,54 +42,54 @@ const ManageBook = () => {
     dispatch(fetchBooks());
   };
 
-  if (bookDetailsStatus === 'loading') return <div>Loading...</div>;
+  if (bookDetailsStatus === 'loading') return <div className="glass-page-center muted-copy">Loading...</div>;
 
   return (
-    <div className="min-h-screen text-gray-200 p-8 flex justify-center items-center">
-      <div className="w-full max-w-lg bg-gradient-to-b from-gray-800 to-gray-900 p-6 rounded-lg shadow-lg">
-        <h1 className="text-3xl font-semibold text-center mb-6 text-white">Manage Book</h1>
+    <div className="glass-page-center text-gray-200">
+      <div className="glass-panel w-full max-w-lg p-6">
+        <h1 className="section-title mb-6 text-center text-3xl">Manage Book</h1>
         <form onSubmit={(e) => e.preventDefault()} className="space-y-4">
           {/* Title Input */}
           <div>
-            <label className="block mb-2 text-lg font-medium text-gray-300">Title</label>
+            <label className="mb-2 block text-lg font-medium">Title</label>
             <input
               type="text"
               name="title"
               value={formData.title}
               onChange={handleChange}
               placeholder="Enter book title"
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-black transition-all duration-300"
+              className="px-4 py-3"
               required
             />
           </div>
 
           {/* Author Input */}
           <div>
-            <label className="block mb-2 text-lg font-medium text-gray-300">Author</label>
+            <label className="mb-2 block text-lg font-medium">Author</label>
             <input
               type="text"
               name="author"
               value={formData.author}
               onChange={handleChange}
               placeholder="Enter author's name"
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-black transition-all duration-300"
+              className="px-4 py-3"
               required
             />
           </div>
 
           {/* Buttons */}
-          <div className="flex space-x-4">
+          <div className="flex gap-4">
             <button
               type="button"
               onClick={handleUpdate}
-              className="w-full py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-4 focus:ring-blue-300 transition-all duration-300"
+              className="w-full py-3 font-bold"
             >
               Update
             </button>
             <button
               type="button"
               onClick={handleDelete}
-              className="w-full py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 focus:outline-none focus:ring-4 focus:ring-red-300 transition-all duration-300"
+              className="danger-button w-full py-3 font-bold"
             >
               Delete
             </button>

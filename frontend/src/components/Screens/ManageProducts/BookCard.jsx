@@ -8,7 +8,7 @@ const BookCard = React.memo(({ book, isLoading }) => {
   // If data is still loading, display skeleton loader
   if (isLoading) {
     return (
-      <div className="bg-gray-800 shadow-lg rounded-lg overflow-hidden p-4">
+      <div className="glass-card overflow-hidden p-4">
         <Skeleton height={200} width="100%" />
         <div className="mt-4">
           <Skeleton height={30} width="80%" />
@@ -25,31 +25,31 @@ const BookCard = React.memo(({ book, isLoading }) => {
 
   // Once data is loaded, render the actual book details
   return (
-    <div className="bg-gradient-to-b from-gray-700 to-gray-800 text-gray-200 shadow-lg rounded-lg overflow-hidden transition-transform hover:scale-105">
+    <article className="glass-card overflow-hidden text-gray-200">
       <img
         src={mediaUrl('/manage_p', book.image)}
         alt={book.title}
         loading="lazy"  // Lazy load images for performance
-        className="w-full h-48 object-cover rounded-t-lg"
+        className="h-56 w-full object-cover"
       />
       <div className="p-6 space-y-4">
-        <h2 className="text-xl font-semibold text-yellow-400">{book.title}</h2>
-        <p className="text-gray-300">Author: <span className="font-semibold">{book.author}</span></p>
-        <p className="text-lg font-bold text-green-400 mt-4">${book.price}</p>
+        <h2 className="text-xl font-bold text-white">{book.title}</h2>
+        <p className="muted-copy">Author: <span className="font-semibold text-white">{book.author}</span></p>
+        <p className="price-chip mt-4">${book.price}</p>
         
         {/* Added Posted by section */}
-        <div className="text-gray-400 text-sm mt-4">
-          <span className="font-semibold text-yellow-500">Posted by:</span> {book.user.first_name} {book.user.last_name}
-          <span className="ml-2 text-gray-500">on {formattedDate}</span>
+        <div className="muted-copy mt-4 text-sm">
+          <span className="font-semibold text-[color:var(--gold)]">Posted by:</span> {book.user.first_name} {book.user.last_name}
+          <span className="ml-2 text-white/50">on {formattedDate}</span>
         </div>
         
-        <Link to={`/books/${book.id}`}>
-          <button className="mt-4 w-full bg-blue-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-300">
+        <Link to={`/books/${book.id}`} className="block no-underline">
+          <button className="mt-4 w-full px-4 py-3 font-bold">
             View Details
           </button>
         </Link>
       </div>
-    </div>
+    </article>
   );
 });
 

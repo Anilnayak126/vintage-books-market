@@ -74,74 +74,74 @@ const EditProfile = () => {
   };
 
   return (
-    <div className="min-h-screen flex justify-center items-center text-gray-200 p-8">
-      <div className="w-full max-w-3xl bg-gradient-to-b from-gray-800 to-gray-900 p-8 rounded-lg shadow-lg">
-        <h1 className="text-3xl font-semibold text-center mb-8 text-white">Edit Profile</h1>
+    <div className="glass-page-center text-gray-200">
+      <div className="glass-panel w-full max-w-3xl p-8">
+        <h1 className="section-title mb-8 text-center text-3xl">Edit Profile</h1>
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label className="block text-gray-300 font-medium">First Name</label>
+              <label className="block font-medium">First Name</label>
               <input
                 type="text"
                 name="first_name"
                 value={profileData.first_name}
                 onChange={handleChange}
-                className="w-full p-3 mt-2 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
+                className="mt-2 p-3"
               />
             </div>
             <div>
-              <label className="block text-gray-300 font-medium">Last Name</label>
+              <label className="block font-medium">Last Name</label>
               <input
                 type="text"
                 name="last_name"
                 value={profileData.last_name}
                 onChange={handleChange}
-                className="w-full p-3 mt-2 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
+                className="mt-2 p-3"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-gray-300 font-medium">Email</label>
+            <label className="block font-medium">Email</label>
             <input
               type="email"
               name="email"
               value={profileData.email}
               onChange={handleChange}
               disabled
-              className="w-full p-3 mt-2 border border-gray-600 rounded-md bg-gray-700 cursor-not-allowed text-gray-400"
+              className="mt-2 cursor-not-allowed p-3"
             />
           </div>
 
           <div>
-            <label className="block text-gray-300 font-medium">Phone Number</label>
+            <label className="block font-medium">Phone Number</label>
             <input
               type="text"
               name="phone_number"
               value={profileData.phone_number}
               onChange={handleChange}
-              className="w-full p-3 mt-2 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
+              className="mt-2 p-3"
             />
           </div>
 
           <div>
-            <label className="block text-gray-300 font-medium">Address</label>
+            <label className="block font-medium">Address</label>
             <textarea
               name="address"
               value={profileData.address}
               onChange={handleChange}
               rows="4"
-              className="w-full p-3 mt-2 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
+              className="mt-2 p-3"
             ></textarea>
           </div>
 
           <div>
-            <label className="block text-gray-300 font-medium">Profile Image</label>
+            <label className="block font-medium">Profile Image</label>
             <input
               type="file"
               name="profile_image"
               onChange={handleFileChange}
-              className="w-full p-3 mt-2 border border-gray-600 rounded-md text-gray-300"
+              className="mt-2 p-3"
             />
           </div>
 
@@ -149,7 +149,7 @@ const EditProfile = () => {
             <button
               type="submit"
               disabled={loading || reduxLoading}
-              className="w-full py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-4 focus:ring-blue-300"
+              className="w-full py-3 font-bold"
             >
               {loading || reduxLoading ? 'Updating...' : 'Update Profile'}
             </button>
@@ -157,11 +157,11 @@ const EditProfile = () => {
         </form>
 
         {successMessage || reduxSuccessMessage ? (
-          <p className="mt-4 text-green-500 text-center">{successMessage || reduxSuccessMessage}</p>
+          <p className="mt-4 text-center text-[color:var(--green)]">{successMessage || reduxSuccessMessage}</p>
         ) : null}
 
         {error || reduxError ? (
-          <p className="mt-4 text-red-500 text-center">{error || reduxError}</p>
+          <p className="mt-4 text-center text-[color:var(--rose)]">{error || reduxError}</p>
         ) : null}
       </div>
     </div>

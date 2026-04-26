@@ -40,43 +40,49 @@ const BrowseBooks = () => {
   };
 
   return (
-    <div className="min-h-screen p-6 bg-gray-900">
-      <div className="max-w-7xl mx-auto">
-        <h1 className="text-3xl font-bold text-white mb-6">Browse Books</h1>
+    <div className="glass-page">
+      <div className="page-container">
+        <div className="mb-8">
+          <span className="eyebrow mb-3">Marketplace</span>
+          <h1 className="section-title text-3xl sm:text-4xl">Browse Books</h1>
+          <p className="muted-copy mt-3 max-w-2xl">
+            Search rare, classic, and reader-loved books from sellers who care about the details.
+          </p>
+        </div>
 
         {/* Filters Section */}
-        <div className="p-6 shadow-lg rounded-lg flex flex-col sm:flex-row items-center gap-4 mb-6 bg-gray-800">
+        <div className="glass-panel mb-8 flex flex-col items-stretch gap-4 p-5 sm:flex-row sm:items-center">
           <input
             type="text"
             placeholder="Search by title, author, or description"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="border border-gray-300 rounded-lg px-4 py-2 flex-1 text-black"
+            className="px-4 py-3 sm:flex-1"
           />
           <input
             type="number"
             placeholder="Min Price"
             value={minPrice}
             onChange={(e) => setMinPrice(e.target.value)}
-            className="border border-gray-300 rounded-lg px-4 py-2 w-32 text-black"
+            className="px-4 py-3 sm:w-32"
           />
           <input
             type="number"
             placeholder="Max Price"
             value={maxPrice}
             onChange={(e) => setMaxPrice(e.target.value)}
-            className="border border-gray-300 rounded-lg px-4 py-2 w-32 text-black"
+            className="px-4 py-3 sm:w-32"
           />
           <button
             onClick={handleSearch}
-            className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition duration-300"
+            className="px-6 py-3 font-bold"
           >
             Search
           </button>
         </div>
 
-        {isLoading && <p className="text-center text-gray-600">Loading...</p>}
-        {error && <p className="text-center text-red-600">Error: {error}</p>}
+        {isLoading && <p className="status-panel text-center muted-copy">Loading books...</p>}
+        {error && <p className="status-panel text-center text-[color:var(--rose)]">Error: {error}</p>}
 
         {/* Books Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -85,23 +91,23 @@ const BrowseBooks = () => {
               <BookCard key={book.id} book={book} isLoading={isLoading} />
             ))
           ) : (
-            <p className="text-center text-gray-600">No books found</p>
+            <p className="status-panel text-center muted-copy sm:col-span-2 lg:col-span-3">No books found</p>
           )}
         </div>
 
         {/* Pagination */}
         {totalPages > 1 && (
-          <div className="flex justify-center mt-8 space-x-2">
+          <div className="mt-8 flex justify-center gap-2">
             {[...Array(totalPages).keys()].map((page) => (
               <button
                 key={page}
                 disabled={currentPage === page + 1}
                 onClick={() => handlePageChange(page + 1)}
-                className={`px-4 py-2 rounded-lg text-white ${
+                className={`px-4 py-2 font-bold ${
                   currentPage === page + 1
-                    ? "bg-blue-600"
-                    : "bg-gray-600 hover:bg-blue-600"
-                } transition duration-300`}
+                    ? "success-button"
+                    : "secondary-button"
+                }`}
               >
                 {page + 1}
               </button>

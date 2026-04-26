@@ -38,18 +38,18 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex justify-center items-center  p-8">
-      <div className="w-full max-w-sm bg-gradient-to-b from-gray-700 to-gray-800 p-8 rounded-lg shadow-lg animate-fade-in-down">
-        <h2 className="text-3xl font-bold text-center mb-6 text-white">Login</h2>
+    <div className="glass-page-center">
+      <div className="glass-panel w-full max-w-sm p-8 animate-fade-in-down">
+        <h2 className="section-title mb-6 text-center text-3xl">Login</h2>
 
         {error && (
-          <div className="text-red-500 text-center mb-4">
-            <div className="fixed inset-0 bg-black bg-opacity-60 z-50 flex justify-center items-center animate-fade-in-up">
-              <div className="bg-white p-6 rounded-lg shadow-lg text-black">
+          <div className="mb-4 text-center text-[color:var(--rose)]">
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 animate-fade-in-up">
+              <div className="glass-panel max-w-sm p-6 text-white">
                 <p>{error}</p>
                 <button
                   onClick={() => setError('')}
-                  className="mt-4 bg-red-500 hover:bg-red-400 text-white py-2 px-4 rounded-lg transition-all duration-300"
+                  className="danger-button mt-4 px-4 py-2 font-bold"
                 >
                   Close
                 </button>
@@ -60,7 +60,7 @@ const Login = () => {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label htmlFor="username" className="block text-lg font-medium text-gray-300 mb-2">
+            <label htmlFor="username" className="mb-2 block text-lg font-medium">
               Username
             </label>
             <input
@@ -68,13 +68,13 @@ const Login = () => {
               id="username"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 text-black transition-all duration-300"
+              className="px-4 py-3"
               placeholder="Enter your username"
             />
           </div>
 
           <div>
-            <label htmlFor="password" className="block text-lg font-medium text-gray-300 mb-2">
+            <label htmlFor="password" className="mb-2 block text-lg font-medium">
               Password
             </label>
             <input
@@ -82,14 +82,14 @@ const Login = () => {
               id="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 text-black transition-all duration-300"
+              className="px-4 py-3"
               placeholder="Enter your password"
             />
           </div>
 
           <button
             type="submit"
-            className={`w-full py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-4 focus:ring-yellow-300 transition-all duration-300 ${
+            className={`w-full py-3 font-bold ${
               loading ? 'opacity-50 cursor-not-allowed' : ''
             }`}
             disabled={loading}
@@ -99,9 +99,9 @@ const Login = () => {
         </form>
 
         <div className="mt-6 text-center">
-          <p className="text-sm text-gray-400">
+          <p className="muted-copy text-sm">
             Don't have an account?{' '}
-            <Link to="/register" className="text-blue-400 hover:underline">
+            <Link to="/register" className="text-link">
               Register here
             </Link>
           </p>

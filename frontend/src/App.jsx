@@ -50,7 +50,6 @@ const App = () => {
           <Route path="/manage_books/:id" element={<ManageBook />} />
           <Route path="/term&C" element={<TermsAndConditions />} />
           <Route path="/privacy" element={< PrivacyPolicy/>} />
-          <Route path="/privacy" element={< PrivacyPolicy/>} />
           <Route path="/payment-success" element={<PaymentSuccess />} />
           <Route path="/payment-failed" element={<PaymentFailed />} />
           

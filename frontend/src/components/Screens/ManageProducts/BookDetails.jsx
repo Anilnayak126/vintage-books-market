@@ -82,13 +82,13 @@ const BookDetails = () => {
   };
 
   return (
-    <div className="min-h-screen py-8 text-gray-200">
-      <div className="max-w-6xl mx-auto p-6 bg-gradient-to-b from-gray-800 to-gray-700 shadow-xl rounded-lg space-y-8">
+    <div className="glass-page text-gray-200">
+      <div className="page-container glass-panel space-y-8 p-6">
 
         {/* Back Button */}
         <button
           onClick={() => navigate('/browse')}
-          className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-300"
+          className="secondary-button px-4 py-2 font-bold"
         >
           <FaArrowLeft className="mr-2" /> Back to Books
         </button>
@@ -97,56 +97,57 @@ const BookDetails = () => {
         {bookDetailsStatus === 'loading' ? (
           <Skeleton height={300} width="100%" />
         ) : bookDetailsStatus === 'failed' ? (
-          <div className="text-center text-red-500">Error: {bookDetailsError}</div>
+          <div className="status-panel text-center text-[color:var(--rose)]">Error: {bookDetailsError}</div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Book Image */}
             <img
               src={mediaUrl('/manage_p', bookDetails?.image)}
               alt={bookDetails?.title || 'Book Image'}
-              className="w-full h-96 object-cover rounded-lg shadow-lg"
+              className="h-96 w-full rounded-lg object-cover shadow-lg"
               onError={(e) => { e.target.src = '/fallback-image.jpg'; }}
             />
 
             {/* Book Info */}
             <div className="space-y-4">
-              <h1 className="text-4xl font-semibold text-yellow-400">{bookDetails?.title || 'Title not available'}</h1>
-              <p className="text-lg text-gray-300"><strong>Author:</strong> {bookDetails?.author || 'Unknown'}</p>
-              <p className="text-lg text-gray-300"><strong>Description:</strong> {bookDetails?.description || 'No description available'}</p>
+              <span className="eyebrow">Book details</span>
+              <h1 className="section-title text-4xl">{bookDetails?.title || 'Title not available'}</h1>
+              <p className="text-lg muted-copy"><strong className="text-white">Author:</strong> {bookDetails?.author || 'Unknown'}</p>
+              <p className="text-lg muted-copy"><strong className="text-white">Description:</strong> {bookDetails?.description || 'No description available'}</p>
 
               <div className="flex items-center space-x-4">
-                <p className="text-2xl font-semibold text-green-500"><strong>Price:</strong> ${bookDetails?.price || 'N/A'}</p>
+                <p className="price-chip text-2xl"><strong>Price:</strong> ${bookDetails?.price || 'N/A'}</p>
               </div>
-              <p className="flex items-center text-sm text-gray-400 mt-2"><FaClock className="mr-2" />Posted: {timeAgo(bookDetails?.created_at)}</p>
+              <p className="muted-copy mt-2 flex items-center text-sm"><FaClock className="mr-2" />Posted: {timeAgo(bookDetails?.created_at)}</p>
 
               {/* Quantity Selector */}
               <div className="flex items-center space-x-4 mt-6">
                 <button
                   onClick={() => setQuantity((prev) => Math.max(prev - 1, 1))}
-                  className="px-3 py-1 bg-gray-600 text-white rounded-lg hover:bg-gray-700"
+                  className="secondary-button px-3 py-1"
                 >
                   -
                 </button>
                 <span className="text-xl">{quantity}</span>
                 <button
                   onClick={() => setQuantity((prev) => prev + 1)}
-                  className="px-3 py-1 bg-gray-600 text-white rounded-lg hover:bg-gray-700"
+                  className="secondary-button px-3 py-1"
                 >
                   +
                 </button>
               </div>
 
               {/* Add to Cart and Wishlist Buttons */}
-              <div className="flex space-x-4 mt-6">
+              <div className="mt-6 flex flex-col gap-4 sm:flex-row">
                 <button
                   onClick={handleAddToCart}
-                  className="flex items-center w-full justify-center px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition duration-300 text-xl"
+                  className="success-button w-full px-4 py-3 text-xl font-bold"
                 >
                   <FaCartPlus className="mr-2" /> Add to Cart
                 </button>
                 <button
                   onClick={handleAddToWishlist}
-                  className="flex items-center w-full justify-center px-4 py-2 bg-pink-500 text-white rounded-lg hover:bg-pink-600 transition duration-300 text-xl"
+                  className="danger-button w-full px-4 py-3 text-xl font-bold"
                 >
                   <FaHeart className="mr-2" /> Add to Wishlist
                 </button>
@@ -157,13 +158,13 @@ const BookDetails = () => {
 
         {/* Seller Information */}
         {bookDetails && bookDetails.user && (
-          <div className="p-6 bg-gradient-to-b from-gray-700 to-gray-800 rounded-lg shadow-lg mt-8">
-            <h2 className="text-2xl font-semibold text-yellow-400 mb-4">Seller Information</h2>
+          <div className="glass-card mt-8 p-6">
+            <h2 className="mb-4 text-2xl font-bold text-[color:var(--gold)]">Seller Information</h2>
             <div className="flex flex-col md:flex-row items-center md:space-x-6 space-y-4 md:space-y-0">
               <img
                 src={mediaUrl('/userDetails', bookDetails.user.user_profile?.profile_image)}
                 alt="User Profile"
-                className="w-24 h-24 rounded-full border-2 border-yellow-400 shadow-md"
+                className="h-24 w-24 rounded-full border-2 border-[color:var(--gold)] object-cover shadow-md"
                 onError={(e) => { e.target.src = '/fallback-profile.jpg'; }}
               />
               <div className="space-y-2">
@@ -171,24 +172,24 @@ const BookDetails = () => {
                   <strong>Name:</strong> {bookDetails.user?.first_name || ''} {bookDetails.user?.last_name || ''}
                 </p>
                 <p className="text-lg font-medium flex items-center space-x-2">
-                  <FaEnvelope className="text-yellow-400" />
-                  <a href={`mailto:${bookDetails.user?.email || ''}`} className="text-blue-400 hover:text-blue-600">
+                  <FaEnvelope className="text-[color:var(--gold)]" />
+                  <a href={`mailto:${bookDetails.user?.email || ''}`} className="text-link">
                     {bookDetails.user?.email || 'Not available'}
                   </a>
                 </p>
                 <p className="text-lg font-medium flex items-center space-x-2">
-                  <FaWhatsapp className="text-green-500" />
+                  <FaWhatsapp className="text-[color:var(--green)]" />
                   <a
                     href={`https://wa.me/${bookDetails.user.user_profile?.phone_number || ''}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-green-400 hover:text-green-600"
+                    className="text-link"
                   >
                     WhatsApp
                   </a>
                 </p>
                 <p className="text-lg font-medium flex items-center space-x-2">
-                  <FaPhone className="text-blue-400" /> {bookDetails.user.user_profile?.phone_number || 'Not available'}
+                  <FaPhone className="text-[color:var(--teal)]" /> {bookDetails.user.user_profile?.phone_number || 'Not available'}
                 </p>
               </div>
             </div>

@@ -4,19 +4,20 @@ import Button from "../../UI/RegisterNow";
 
 const CallToAction = () => {
   return (
-    <section className="py-16 bg-yellow-500 text-black text-center">
-      <div className="container mx-auto">
-        <h2 className="text-3xl sm:text-4xl font-bold mb-6">
-          Start Your Book Journey Today
-        </h2>
-        <p className="text-lg mb-6">
-          Join the Vintage Book Market and explore the world of rare finds.
-        </p>
-        <Link to="/register">
-          <div>
+    <section className="section-band text-center text-white">
+      <div className="page-container">
+        <div className="glass-panel mx-auto max-w-4xl p-8 sm:p-10">
+          <span className="eyebrow mx-auto mb-4">Your next shelf starts here</span>
+          <h2 className="section-title text-3xl sm:text-4xl">
+            Start your book journey today
+          </h2>
+          <p className="muted-copy mx-auto mt-4 max-w-2xl text-lg">
+            Join Vintage Book Market and step into a calmer, richer way to find rare books.
+          </p>
+          <Link to="/register" className="mt-7 inline-flex no-underline">
             <Button />
-          </div>
-        </Link>
+          </Link>
+        </div>
       </div>
     </section>
   );

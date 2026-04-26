@@ -31,39 +31,39 @@ const MyBooks = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col justify-between text-gray-200 p-4">
+    <div className="flex min-h-screen flex-col justify-between p-2 text-gray-200 sm:p-4">
       <div>
-        <h1 className="text-2xl font-semibold text-center mb-7 text-yellow-400 ">My Listed Books</h1>
+        <h1 className="mb-7 text-center text-2xl font-bold text-[color:var(--gold)]">My Listed Books</h1>
         <div className="flex flex-col space-y-3">
           {userBooks.length > 0 ? (
-            userBooks.map((book, index) => (
+            userBooks.map((book) => (
               <div
                 key={book.id}
-                className="flex items-center justify-between bg-gray-800 p-3 rounded-lg shadow-md hover:shadow-lg transition duration-300 ease-in-out"
+                className="glass-list-item flex flex-col gap-3 p-3 transition duration-300 ease-in-out sm:flex-row sm:items-center sm:justify-between"
               >
                 <img
                   src={mediaUrl('/manage_p', book.image)}
                   alt={book.title}
-                  className="w-20 h-30 object-cover rounded-lg mr-3"
+                  className="h-24 w-20 object-cover sm:mr-3"
                 />
                 <div className="flex-1">
                   <div className="flex justify-between mb-1">
                     <h2 className="text-lg font-semibold text-white">{book.title}</h2>
                   </div>
-                  <p className="text-gray-300 text-xs">
+                  <p className="muted-copy text-xs">
                     Created At: {new Date(book.created_at).toLocaleDateString()}
                   </p>
                 </div>
                 <button
                   onClick={() => handleManageListedBooks(book.id)}
-                  className="py-1 px-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-4 focus:ring-blue-300 transition-all duration-300"
+                  className="px-3 py-2 text-sm font-bold"
                 >
                   Manage
                 </button>
               </div>
             ))
           ) : (
-            <div className="text-center text-gray-400">No books found.</div>
+            <div className="status-panel text-center muted-copy">No books found.</div>
           )}
         </div>
       </div>
@@ -72,7 +72,7 @@ const MyBooks = () => {
       <div className="flex justify-center mb-10 space-x-1">
         <button
           onClick={() => handlePageChange(page - 1)}
-          className="px-3 py-1 bg-gray-700 text-gray-300 rounded-lg hover:bg-blue-500 hover:text-white transition-all duration-300"
+          className="secondary-button px-3 py-1"
           disabled={page === 1}
         >
           Prev
@@ -83,16 +83,16 @@ const MyBooks = () => {
             onClick={() => handlePageChange(index + 1)}
             className={`px-3 py-1 rounded-lg text-sm ${
               page === index + 1
-                ? "bg-blue-500 text-white"
-                : "bg-gray-700 text-gray-300"
-            } hover:bg-blue-600 focus:outline-none transition-all duration-300`}
+                ? "success-button"
+                : "secondary-button"
+            }`}
           >
             {index + 1}
           </button>
         ))}
         <button
           onClick={() => handlePageChange(page + 1)}
-          className="px-3 py-1 bg-gray-700 text-gray-300 rounded-lg hover:bg-blue-500 hover:text-white transition-all duration-300"
+          className="secondary-button px-3 py-1"
           disabled={page === totalPages}
         >
           Next

@@ -60,17 +60,17 @@ const RegisterPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex justify-center items-center p-8">
-      <div className="w-full max-w-4xl bg-gradient-to-b from-gray-700 to-gray-800 p-8 rounded-lg shadow-lg animate-fade-in-down border border-gray-600">
-        <h2 className="text-4xl font-bold text-center text-white mb-8">Create an Account</h2>
+    <div className="glass-page-center">
+      <div className="glass-panel w-full max-w-4xl p-8 animate-fade-in-down">
+        <h2 className="section-title mb-8 text-center text-4xl">Create an Account</h2>
 
         {error && (
-          <div className="fixed inset-0 bg-black bg-opacity-60 z-50 flex justify-center items-center animate-fade-in-up">
-            <div className="bg-white p-6 rounded-lg shadow-lg text-black">
-              <p className="text-red-600">{error}</p>
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 animate-fade-in-up">
+            <div className="glass-panel max-w-sm p-6 text-white">
+              <p className="text-[color:var(--rose)]">{error}</p>
               <button
                 onClick={() => dispatch({ type: 'auth/clearError' })}
-                className="mt-4 bg-yellow-500 hover:bg-yellow-400 text-white py-2 px-4 rounded-lg transition-all duration-300"
+                className="mt-4 px-4 py-2 font-bold"
               >
                 Close
               </button>
@@ -79,9 +79,9 @@ const RegisterPage = () => {
         )}
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="grid grid-cols-2 gap-6 mb-6">
+          <div className="mb-6 grid grid-cols-1 gap-6 md:grid-cols-2">
             <div>
-              <label className="block text-gray-300 font-medium">Username</label>
+              <label className="block font-medium">Username</label>
               <input
                 type="text"
                 name="username"
@@ -89,12 +89,12 @@ const RegisterPage = () => {
                 onChange={handleChange}
                 placeholder="Enter your username"
                 required
-                className="w-full px-4 py-3 mt-2 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 text-black transition-all duration-300"
+                className="mt-2 px-4 py-3"
               />
             </div>
 
             <div>
-              <label className="block text-gray-300 font-medium">Email</label>
+              <label className="block font-medium">Email</label>
               <input
                 type="email"
                 name="email"
@@ -102,12 +102,12 @@ const RegisterPage = () => {
                 onChange={handleChange}
                 placeholder="Enter your email"
                 required
-                className="w-full px-4 py-3 mt-2 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 text-black transition-all duration-300"
+                className="mt-2 px-4 py-3"
               />
             </div>
 
             <div>
-              <label className="block text-gray-300 font-medium">First Name</label>
+              <label className="block font-medium">First Name</label>
               <input
                 type="text"
                 name="first_name"
@@ -115,12 +115,12 @@ const RegisterPage = () => {
                 onChange={handleChange}
                 placeholder="Enter your first name"
                 required
-                className="w-full px-4 py-3 mt-2 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 text-black transition-all duration-300"
+                className="mt-2 px-4 py-3"
               /> 
             </div>
 
             <div>
-              <label className="block text-gray-300 font-medium">Last Name</label>
+              <label className="block font-medium">Last Name</label>
               <input
                 type="text"
                 name="last_name"
@@ -128,14 +128,14 @@ const RegisterPage = () => {
                 onChange={handleChange}
                 placeholder="Enter your last name"
                 required
-                className="w-full px-4 py-3 mt-2 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 text-black transition-all duration-300"
+                className="mt-2 px-4 py-3"
               />
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-6 mb-6">
+          <div className="mb-6 grid grid-cols-1 gap-6 md:grid-cols-2">
             <div>
-              <label className="block text-gray-300 font-medium">Password</label>
+              <label className="block font-medium">Password</label>
               <input
                 type="password"
                 name="password"
@@ -143,12 +143,12 @@ const RegisterPage = () => {
                 onChange={handleChange}
                 placeholder="Enter your password"
                 required
-                className="w-full px-4 py-3 mt-2 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 text-black transition-all duration-300"
+                className="mt-2 px-4 py-3"
               />
             </div>
 
             <div>
-              <label className="block text-gray-300 font-medium">Confirm Password</label>
+              <label className="block font-medium">Confirm Password</label>
               <input
                 type="password"
                 name="confirm_password"
@@ -156,49 +156,49 @@ const RegisterPage = () => {
                 onChange={handleChange}
                 placeholder="Confirm your password"
                 required
-                className="w-full px-4 py-3 mt-2 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 text-black transition-all duration-300"
+                className="mt-2 px-4 py-3"
               />
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-6 mb-6">
+          <div className="mb-6 grid grid-cols-1 gap-6 md:grid-cols-2">
             <div>
-              <label className="block text-gray-300 font-medium">Phone Number</label>
+              <label className="block font-medium">Phone Number</label>
               <input
                 type="text"
                 name="phone_number"
                 value={formData.phone_number}
                 onChange={handleChange}
                 placeholder="Enter your phone number"
-                className="w-full px-4 py-3 mt-2 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 text-black transition-all duration-300"
+                className="mt-2 px-4 py-3"
               />
             </div>
 
             <div>
-              <label className="block text-gray-300 font-medium">Address</label>
+              <label className="block font-medium">Address</label>
               <input
                 type="text"
                 name="address"
                 value={formData.address}
                 onChange={handleChange}
                 placeholder="Enter your address"
-                className="w-full px-4 py-3 mt-2 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 text-black transition-all duration-300"
+                className="mt-2 px-4 py-3"
               />
             </div>
           </div>
 
           <div className="mb-6">
-            <label className="block text-gray-300 font-medium">Profile Image</label>
+            <label className="block font-medium">Profile Image</label>
             <input
               type="file"
               name="profile_image"
               onChange={handleImageChange}
               accept="image/*"
-              className="w-full px-4 py-3 mt-2 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 text-black transition-all duration-300"
+              className="mt-2 px-4 py-3"
             />
             {imagePreview && (
               <div className="mt-4 text-center">
-                <img src={imagePreview} alt="Image Preview" className="w-24 h-24 object-cover rounded-full mx-auto border-4 border-yellow-500" />
+                <img src={imagePreview} alt="Image Preview" className="mx-auto h-24 w-24 rounded-full border-4 border-[color:var(--gold)] object-cover" />
               </div>
             )}
           </div>
@@ -206,7 +206,7 @@ const RegisterPage = () => {
           <button
             type="submit"
             disabled={loading}
-            className={`w-full py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-4 focus:ring-yellow-300 transition-all duration-300 ${
+            className={`w-full py-3 font-bold ${
               loading ? 'opacity-50 cursor-not-allowed' : ''
             }`}
           >
@@ -215,9 +215,9 @@ const RegisterPage = () => {
         </form>
 
         <div className="text-center mt-4">
-          <p className="text-sm text-gray-400">
+          <p className="muted-copy text-sm">
             Already have an account?{' '}
-            <Link to={"/login"} className="text-blue-400 hover:underline">Login here</Link>
+            <Link to={"/login"} className="text-link">Login here</Link>
           </p>
         </div>
       </div>

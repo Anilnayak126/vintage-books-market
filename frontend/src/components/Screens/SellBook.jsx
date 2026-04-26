@@ -41,73 +41,73 @@ const SellBook = () => {
   };
 
   return (
-    <div className="min-h-screen text-gray-200 p-8 flex justify-center items-center">
-      <div className="w-full max-w-lg bg-gradient-to-b from-gray-800 to-gray-900 p-6 rounded-lg shadow-lg">
-        <h1 className="text-3xl font-semibold text-center mb-6 text-white">Sell Your Book</h1>
+    <div className="glass-page-center text-gray-200">
+      <div className="glass-panel w-full max-w-lg p-6">
+        <h1 className="section-title mb-6 text-center text-3xl">Sell Your Book</h1>
         {createStatus === 'failed' && (
-          <p className="text-red-500 mb-4 animate__animated animate__shakeX">Error: {createError}</p>
+          <p className="mb-4 text-[color:var(--rose)] animate__animated animate__shakeX">Error: {createError}</p>
         )}
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block mb-2 text-lg font-medium text-gray-300">Title</label>
+            <label className="mb-2 block text-lg font-medium">Title</label>
             <input
               type="text"
               name="title"
               value={formData.title}
               onChange={handleChange}
               placeholder="Enter book title"
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-black transition-all duration-300"
+              className="px-4 py-3"
               required
             />
           </div>
           <div>
-            <label className="block mb-2 text-lg font-medium text-gray-300">Author</label>
+            <label className="mb-2 block text-lg font-medium">Author</label>
             <input
               type="text"
               name="author"
               value={formData.author}
               onChange={handleChange}
               placeholder="Enter author's name"
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-black transition-all duration-300"
+              className="px-4 py-3"
               required
             />
           </div>
           <div>
-            <label className="block mb-2 text-lg font-medium text-gray-300">Description</label>
+            <label className="mb-2 block text-lg font-medium">Description</label>
             <textarea
               name="description"
               value={formData.description}
               onChange={handleChange}
               placeholder="Enter book description"
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-black transition-all duration-300"
+              className="px-4 py-3"
               required
             />
           </div>
           <div>
-            <label className="block mb-2 text-lg font-medium text-gray-300">Price ($)</label>
+            <label className="mb-2 block text-lg font-medium">Price ($)</label>
             <input
               type="number"
               name="price"
               value={formData.price}
               onChange={handleChange}
               placeholder="Enter book price"
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-black transition-all duration-300"
+              className="px-4 py-3"
               required
             />
           </div>
           <div>
-            <label className="block mb-2 text-lg font-medium text-gray-300">Image</label>
+            <label className="mb-2 block text-lg font-medium">Image</label>
             <input
               type="file"
               name="image"
               onChange={handleFileChange}
-              className="w-full px-4 py-2 border rounded-lg bg-gray-100"
+              className="px-4 py-3"
               required
             />
           </div>
           <button
             type="submit"
-            className="w-full py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-4 focus:ring-blue-300 transition-all duration-300"
+            className="w-full py-3 font-bold"
             disabled={createStatus === 'loading'}
           >
             {createStatus === 'loading' ? 'Submitting...' : 'Submit'}

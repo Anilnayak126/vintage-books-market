@@ -27,46 +27,46 @@ const MyWishlist = () => {
   // }
 
   if (error) {
-    return <div>Error: {error}</div>;
+    return <div className="status-panel text-[color:var(--rose)]">Error: {error}</div>;
   }
 
   return (
-    <div className="min-h-screen flex flex-col justify-between text-gray-200 p-4">
+    <div className="flex min-h-screen flex-col justify-between p-2 text-gray-200 sm:p-4">
       <div>
-        <h1 className="text-2xl font-semibold text-center mb-7 text-yellow-400">My Wishlist</h1>
+        <h1 className="mb-7 text-center text-2xl font-bold text-[color:var(--gold)]">My Wishlist</h1>
         <div className="flex flex-col space-y-3">
           {items.length > 0 ? (
             items.map((item) => (
               <div
                 key={item.id}
-                className="flex items-center justify-between bg-gray-800 p-3 rounded-lg shadow-md hover:shadow-lg transition duration-300 ease-in-out"
+                className="glass-list-item flex flex-col gap-3 p-3 transition duration-300 ease-in-out sm:flex-row sm:items-center sm:justify-between"
               >
                 <img
                   src={mediaUrl('/manage_p', item.bookdetails.image)}
                   alt={item.bookdetails.title}
-                  className="w-20 h-30 object-cover rounded-lg mr-3"
+                  className="h-24 w-20 object-cover sm:mr-3"
                 />
                 <div className="flex-1">
                   <div className="flex justify-between mb-1">
                     <h2 className="text-lg font-semibold text-white">{item.bookdetails.title}</h2>
-                    <p className="text-gray-300 text-xs">${item.bookdetails.price}</p>
+                    <p className="price-chip text-xs">${item.bookdetails.price}</p>
                   </div>
-                  <p className="text-gray-300 text-xs">
+                  <p className="muted-copy text-xs">
                     Added At: {new Date(item.added_at).toLocaleDateString()}
                   </p>
                 </div>
                 <button
                   onClick={() => dispatch(removeFromWishlist(item.bookdetails.id))}
-                  className="py-1 px-3 bg-red-500 text-white rounded-lg hover:bg-red-600 focus:outline-none focus:ring-4 focus:ring-red-300 transition-all duration-300"
+                  className="danger-button px-3 py-2 text-sm font-bold"
                 >
                   Remove
                 </button>
               </div>
             ))
           ) : (
-            <p>
+            <p className="status-panel muted-copy">
               Your wishlist is empty.{' '}
-              <Link to="/browse" className="text-yellow-500">
+              <Link to="/browse" className="text-link">
                 Browse books
               </Link>
               .
@@ -78,7 +78,7 @@ const MyWishlist = () => {
       <div className="flex justify-center mb-10 space-x-1">
         <button
           onClick={() => handlePageChange(page - 1)}
-          className="px-3 py-1 bg-gray-700 text-gray-300 rounded-lg hover:bg-blue-500 hover:text-white transition-all duration-300"
+          className="secondary-button px-3 py-1"
           disabled={page === 1}
         >
           Prev
@@ -90,9 +90,9 @@ const MyWishlist = () => {
             onClick={() => handlePageChange(index + 1)}
             className={`px-3 py-1 rounded-lg text-sm ${
               page === index + 1
-                ? 'bg-blue-500 text-white'
-                : 'bg-gray-700 text-gray-300'
-            } hover:bg-blue-600 focus:outline-none transition-all duration-300`}
+                ? 'success-button'
+                : 'secondary-button'
+            }`}
           >
             {index + 1}
           </button>
@@ -100,7 +100,7 @@ const MyWishlist = () => {
 
         <button
           onClick={() => handlePageChange(page + 1)}
-          className="px-3 py-1 bg-gray-700 text-gray-300 rounded-lg hover:bg-blue-500 hover:text-white transition-all duration-300"
+          className="secondary-button px-3 py-1"
           disabled={page === totalPages}
         >
           Next
