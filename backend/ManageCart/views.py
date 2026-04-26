@@ -21,11 +21,11 @@ class CartView(APIView):
 
     def get(self, request):
         cart_items = CartItem.objects.filter(user=request.user)
-        serializer = CartItemSerializer(cart_items, many=True)
+        serializer = CartItemSerializer(cart_items, many=True, context={'request': request})
         return Response(serializer.data)
 
     def post(self, request):
-        serializer = CartItemSerializer(data=request.data)
+        serializer = CartItemSerializer(data=request.data, context={'request': request})
         if serializer.is_valid():
             book = serializer.validated_data['book']
 
@@ -40,7 +40,7 @@ class CartView(APIView):
                 book=book,
                 defaults={'quantity': serializer.validated_data['quantity']}
             )
-            return Response(CartItemSerializer(cart_item).data, status=status.HTTP_201_CREATED)
+            return Response(CartItemSerializer(cart_item, context={'request': request}).data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request):
@@ -118,11 +118,11 @@ class WishlistView(APIView):
         wishlist_items = WishlistItem.objects.filter(user=request.user)
         paginator = WishListPagination()
         paginated_items = paginator.paginate_queryset(wishlist_items, request)
-        serializer = WishlistItemSerializer(paginated_items, many=True)
+        serializer = WishlistItemSerializer(paginated_items, many=True, context={'request': request})
         return paginator.get_paginated_response(serializer.data)
 
     def post(self, request):
-        serializer = WishlistItemSerializer(data=request.data)
+        serializer = WishlistItemSerializer(data=request.data, context={'request': request})
         if serializer.is_valid():
             book = serializer.validated_data['book']
 
@@ -138,7 +138,7 @@ class WishlistView(APIView):
             )
             if not created:
                 return Response({"detail": "Item already in wishlist."}, status=status.HTTP_400_BAD_REQUEST)
-            return Response(WishlistItemSerializer(wishlist_item).data, status=status.HTTP_201_CREATED)
+            return Response(WishlistItemSerializer(wishlist_item, context={'request': request}).data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request):

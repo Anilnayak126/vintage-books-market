@@ -1,6 +1,8 @@
 Django==5.1.2
+boto3
 djangorestframework
 djangorestframework-simplejwt
+django-storages
 psycopg2-binary
 python-decouple
 python-dotenv

@@ -10,8 +10,8 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
-from pathlib import Path
 import os
+from pathlib import Path
 from dotenv import load_dotenv
 from django.core.exceptions import ImproperlyConfigured
 
@@ -28,6 +28,17 @@ def env_bool(name, default=False):
 
 def env_list(name, default=''):
     return [item.strip() for item in os.environ.get(name, default).split(',') if item.strip()]
+
+
+def normalize_endpoint_url(value, use_ssl=False):
+    if not value:
+        return ''
+
+    if value.startswith('http://') or value.startswith('https://'):
+        return value.rstrip('/')
+
+    scheme = 'https' if use_ssl else 'http'
+    return f'{scheme}://{value.rstrip("/")}'
 
 
 # Quick-start development settings - unsuitable for production
@@ -57,6 +68,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'old_book_sell',
+    'storages',
     'UserDetails',
     'rest_framework',
     'rest_framework_simplejwt',
@@ -149,6 +162,80 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.environ.get('STATIC_ROOT', os.path.join(BASE_DIR, 'staticfiles'))
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.environ.get('MEDIA_ROOT', os.path.join(BASE_DIR, 'media'))
+
+OBJECT_STORAGE_ENABLED = env_bool('OBJECT_STORAGE_ENABLED', False)
+OBJECT_STORAGE_ACCESS_KEY = os.environ.get('MINIO_ACCESS_KEY', '')
+OBJECT_STORAGE_SECRET_KEY = os.environ.get('MINIO_SECRET_KEY', '')
+OBJECT_STORAGE_BUCKET_NAME = os.environ.get('MINIO_BUCKET_NAME', '')
+OBJECT_STORAGE_REGION_NAME = os.environ.get('MINIO_REGION_NAME', 'us-east-1')
+OBJECT_STORAGE_USE_SSL = env_bool('MINIO_USE_SSL', False)
+OBJECT_STORAGE_VERIFY_SSL = env_bool('MINIO_VERIFY_SSL', OBJECT_STORAGE_USE_SSL)
+OBJECT_STORAGE_ADDRESSING_STYLE = os.environ.get('MINIO_ADDRESSING_STYLE', 'path')
+OBJECT_STORAGE_ENDPOINT_URL = normalize_endpoint_url(
+    os.environ.get('MINIO_ENDPOINT', ''),
+    use_ssl=OBJECT_STORAGE_USE_SSL,
+)
+OBJECT_STORAGE_PUBLIC_ENDPOINT_URL = normalize_endpoint_url(
+    os.environ.get('MINIO_PUBLIC_ENDPOINT', os.environ.get('MINIO_ENDPOINT', '')),
+    use_ssl=OBJECT_STORAGE_USE_SSL,
+)
+OBJECT_STORAGE_PRESIGNED_EXPIRY = int(os.environ.get('MINIO_PRESIGNED_URL_EXPIRY', '3600'))
+OBJECT_STORAGE_BOOTSTRAP_RETRIES = int(os.environ.get('MINIO_BOOTSTRAP_RETRIES', '12'))
+OBJECT_STORAGE_BOOTSTRAP_DELAY = float(os.environ.get('MINIO_BOOTSTRAP_DELAY', '2'))
+
+if OBJECT_STORAGE_ENABLED:
+    missing_storage_settings = [
+        name for name, value in {
+            'MINIO_ACCESS_KEY': OBJECT_STORAGE_ACCESS_KEY,
+            'MINIO_SECRET_KEY': OBJECT_STORAGE_SECRET_KEY,
+            'MINIO_BUCKET_NAME': OBJECT_STORAGE_BUCKET_NAME,
+            'MINIO_ENDPOINT': OBJECT_STORAGE_ENDPOINT_URL,
+            'MINIO_PUBLIC_ENDPOINT': OBJECT_STORAGE_PUBLIC_ENDPOINT_URL,
+        }.items() if not value
+    ]
+    if missing_storage_settings:
+        raise ImproperlyConfigured(
+            'Object storage is enabled but these settings are missing: '
+            + ', '.join(missing_storage_settings)
+        )
+
+if OBJECT_STORAGE_ENABLED:
+    STORAGES = {
+        'default': {
+            'BACKEND': 'storages.backends.s3.S3Storage',
+            'OPTIONS': {
+                'access_key': OBJECT_STORAGE_ACCESS_KEY,
+                'secret_key': OBJECT_STORAGE_SECRET_KEY,
+                'bucket_name': OBJECT_STORAGE_BUCKET_NAME,
+                'region_name': OBJECT_STORAGE_REGION_NAME,
+                'endpoint_url': OBJECT_STORAGE_ENDPOINT_URL,
+                'default_acl': 'private',
+                'file_overwrite': False,
+                'querystring_auth': False,
+                'addressing_style': OBJECT_STORAGE_ADDRESSING_STYLE,
+                'signature_version': 's3v4',
+                'verify': OBJECT_STORAGE_VERIFY_SSL,
+            },
+        },
+        'staticfiles': {
+            'BACKEND': 'django.contrib.staticfiles.storage.StaticFilesStorage',
+        },
+    }
+else:
+    STORAGES = {
+        'default': {
+            'BACKEND': 'django.core.files.storage.FileSystemStorage',
+            'OPTIONS': {
+                'location': MEDIA_ROOT,
+                'base_url': MEDIA_URL,
+            },
+        },
+        'staticfiles': {
+            'BACKEND': 'django.contrib.staticfiles.storage.StaticFilesStorage',
+        },
+    }
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
@@ -177,9 +264,6 @@ SIMPLE_JWT = {
     'BLACKLIST_AFTER_ROTATION': True,
     'ROTATE_REFRESH_TOKENS': True,
 }
-
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.environ.get('MEDIA_ROOT', os.path.join(BASE_DIR, 'media'))
 
 AUTH_USER_MODEL = 'UserDetails.CustomUser'
 

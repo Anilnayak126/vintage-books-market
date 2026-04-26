@@ -83,6 +83,22 @@ const authSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      .addCase(editProfile.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.successMessage = null;
+      })
+      .addCase(editProfile.fulfilled, (state, action) => {
+        const updatedUser = action.payload.user || action.payload;
+        state.user = updatedUser;
+        localStorage.setItem('user', JSON.stringify(updatedUser));
+        state.loading = false;
+        state.successMessage = 'Profile updated successfully!';
+      })
+      .addCase(editProfile.rejected, (state, action) => {
+        state.error = action.payload;
+        state.loading = false;
+      })
       .addCase(changePassword.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -221,11 +237,9 @@ export const editProfile = createAsyncThunk(
       const config = {
         headers: {
           'Authorization': `Bearer ${token}`,
-          'Content-Type': 'multipart/form-data',
         },
       };
       const response = await axios.patch(apiUrl('/userDetails/edit-profile/'), formData, config);
-      // dispatch(fetchUserProfile());
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data?.detail || 'Profile update failed.');

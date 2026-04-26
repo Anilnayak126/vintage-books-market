@@ -3,8 +3,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.parsers import MultiPartParser, FormParser
-from .serializers import UserSerializer, LoginSerializer, ChangePasswordSerializer,EditUserProfileSerializer
-from .models import UserProfile, CustomUser
+from .serializers import UserSerializer, LoginSerializer, ChangePasswordSerializer, EditUserProfileSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
 import logging
 
@@ -17,22 +16,11 @@ class RegisterView(APIView):
 
     def post(self, request):
         user_data = request.data.copy()
-        
-        profile_image = request.FILES.get('profile_image')
-        user_data['profile_image'] = profile_image
 
-        serializer = UserSerializer(data=user_data)
+        serializer = UserSerializer(data=user_data, context={'request': request})
 
         if serializer.is_valid():
-            user = serializer.save()
-
-            UserProfile.objects.create(
-                user=user,
-                phone_number=user_data.get('phone_number', ''),
-                address=user_data.get('address', ''),
-                profile_image=profile_image
-            )
-            
+            serializer.save()
             return Response({"message": "User registered successfully"}, status=status.HTTP_201_CREATED)
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -42,7 +30,7 @@ class LoginView(APIView):
     permission_classes = [AllowAny]
 
     def post(self, request):
-        serializer = LoginSerializer(data=request.data)
+        serializer = LoginSerializer(data=request.data, context={'request': request})
         if serializer.is_valid():
             return Response(serializer.validated_data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -53,7 +41,7 @@ class UserProfileView(APIView):
 
     def get(self, request):
         user = request.user
-        serializer = UserSerializer(user)  
+        serializer = UserSerializer(user, context={'request': request})  
         
         refresh = RefreshToken.for_user(user)
         access_token = str(refresh.access_token)
@@ -107,36 +95,21 @@ class LogoutView(APIView):
 
 class EditProfileView(APIView):
     permission_classes = [IsAuthenticated]
-    parser_classes = [MultiPartParser]
+    parser_classes = [MultiPartParser, FormParser]
 
     def patch(self, request):
         user = request.user
-        user_data = {}
+        serializer = EditUserProfileSerializer(
+            user,
+            data=request.data,
+            partial=True,
+            context={'request': request},
+        )
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
 
-        user_data['first_name'] = request.data.get('first_name', user.first_name)
-        user_data['last_name'] = request.data.get('last_name', user.last_name)
-        user_data['email'] = request.data.get('email', user.email)
-
-       
-        profile_image = request.FILES.get('profile_image')
-        if profile_image:
-            user_data['profile_image'] = profile_image
-
-      
-        user.first_name = user_data['first_name']
-        user.last_name = user_data['last_name']
-        user.email = user_data['email']
-        user.save()
-
-        profile = user.user_profile  
-        profile.phone_number = request.data.get('phone_number', profile.phone_number)
-        profile.address = request.data.get('address', profile.address)
-
-        if profile_image:
-            profile.profile_image = profile_image
-        profile.save()
-
-        serializer = UserSerializer(user)
-        return Response(serializer.data, status=200)
+        user.refresh_from_db()
+        response_serializer = UserSerializer(user, context={'request': request})
+        return Response({'user': response_serializer.data}, status=status.HTTP_200_OK)
 
 

@@ -17,13 +17,13 @@
 
 ## Overview
 
-Vintage Book Market is a full-stack web application where users can create accounts, list books for sale, browse available books, maintain a wishlist, manage a shopping cart, and start PayPal sandbox checkout. The frontend is a React/Vite single-page app served by Nginx in Docker, and the backend is a Django REST Framework API backed by PostgreSQL.
+Vintage Book Market is a full-stack web application where users can create accounts, list books for sale, browse available books, maintain a wishlist, manage a shopping cart, and start PayPal sandbox checkout. The frontend is a React/Vite single-page app served by Nginx in Docker, and the backend is a Django REST Framework API backed by PostgreSQL and MinIO-backed object storage.
 
 ## Project Links
 
 | Area | Path | Purpose |
 | --- | --- | --- |
-| Root app | [`docker-compose.yml`](docker-compose.yml) | Runs frontend, backend, PostgreSQL, and pgAdmin together |
+| Root app | [`docker-compose.yml`](docker-compose.yml) | Runs frontend, backend, PostgreSQL, MinIO, and pgAdmin together |
 | Backend docs | [`backend/README.md`](backend/README.md) | Django API, env variables, Docker, endpoint reference |
 | Frontend docs | [`frontend/README.md`](frontend/README.md) | React app, routes, scripts, API proxy behavior |
 | Backend env template | [`backend/.env.example`](backend/.env.example) | Safe template for local backend configuration |
@@ -36,6 +36,7 @@ Vintage Book Market is a full-stack web application where users can create accou
 | Frontend | React 18, Vite 5, Redux Toolkit, React Router, Axios, Tailwind CSS, Framer Motion |
 | Backend | Python 3.11, Django 5.1, Django REST Framework, Simple JWT, Gunicorn |
 | Database | PostgreSQL 15 in Docker |
+| Object storage | MinIO with S3-compatible private objects and presigned URLs |
 | Web server | Nginx serving the production frontend and proxying `/api` |
 | Auth | JWT access/refresh tokens with profile management |
 | Payments | PayPal sandbox order creation |
@@ -46,7 +47,7 @@ Vintage Book Market is a full-stack web application where users can create accou
 | Feature | Frontend experience | Backend area | Notes |
 | --- | --- | --- | --- |
 | Authentication | Register, login, logout, token refresh | `UserDetails` | Uses JWT access and refresh tokens |
-| Profile management | View profile, edit profile, change password | `UserDetails` | Supports profile image uploads |
+| Profile management | View profile, edit profile, change password | `UserDetails` | Supports MinIO-backed profile image uploads |
 | Browse books | Browse and search books | `ManageProducts` | Supports pagination and filtering inputs |
 | Sell books | Create book listings with image upload | `ManageProducts` | Listings are tied to the authenticated user |
 | Manage listings | View, edit, and delete your own books | `ManageProducts` | Protected by authentication |
@@ -62,7 +63,7 @@ flowchart LR
   Browser[Browser] --> Frontend[Nginx + React app]
   Frontend -->|/api/*| Backend[Django REST API]
   Backend --> Postgres[(PostgreSQL)]
-  Backend --> Media[(Mounted media folder)]
+  Backend --> MinIO[(MinIO Object Storage)]
   Backend --> PayPal[PayPal Sandbox API]
   PgAdmin[pgAdmin] --> Postgres
 ```
@@ -107,6 +108,8 @@ Open these URLs:
 | Frontend | http://localhost:3000 |
 | Backend API | http://localhost:8000 |
 | Django admin | http://localhost:8000/admin |
+| MinIO API | http://localhost:9000 |
+| MinIO Console | http://localhost:9001 |
 | pgAdmin | http://localhost:8080 |
 | PostgreSQL | `localhost:5432` |
 
@@ -141,6 +144,7 @@ Secrets belong in `.env` files only. Do not commit real `SECRET_KEY`, database p
 | `.env` | `DB_NAME`, `DB_USER`, `DB_PASSWORD`, `DB_PORT` | Compose-level database defaults |
 | `backend/.env` | `SECRET_KEY` | Django secret key |
 | `backend/.env` | `DB_HOST=postgres` | Container database host |
+| `backend/.env` | `OBJECT_STORAGE_ENABLED`, `MINIO_*` | MinIO object storage and presigned URL settings |
 | `backend/.env` | `PAYPAL_CLIENT_ID`, `PAYPAL_CLIENT_SECRET` | PayPal sandbox credentials |
 | `frontend/.env` | `VITE_API_BASE_URL=/api` | Browser-facing API base path |
 | `frontend/.env` | `VITE_API_PROXY_TARGET=http://localhost:8000` | Local Vite dev proxy target |
@@ -152,6 +156,7 @@ Secrets belong in `.env` files only. Do not commit real `SECRET_KEY`, database p
 | `frontend` | `./frontend` | `3000:80` | Production React app served by Nginx |
 | `backend` | `./backend` | `8000:8000` | Django API running with Gunicorn |
 | `postgres` | `postgres:15` | `5432:5432` | Application database |
+| `minio` | `minio/minio` | `9000:9000`, `9001:9001` | S3-compatible object storage and console |
 | `pgadmin` | `dpage/pgadmin4` | `8080:80` | PostgreSQL admin UI |
 
 ## Common Commands
@@ -164,12 +169,17 @@ Secrets belong in `.env` files only. Do not commit real `SECRET_KEY`, database p
 | View frontend logs | `docker compose logs -f frontend` |
 | Create Django superuser | `docker compose exec backend python manage.py createsuperuser` |
 | Run migrations manually | `docker compose exec backend python manage.py migrate` |
+| Create MinIO bucket manually | `docker compose exec backend python manage.py ensure_storage_bucket` |
 | Stop containers | `docker compose down` |
 | Reset database volumes | `docker compose down -v` |
 
 ## API Summary
 
 All frontend production API calls go through `/api`, which Nginx proxies to the backend container.
+
+Images are stored privately in MinIO. API responses return:
+- the stored object key, such as `image_key` or `profile_image_key`
+- a time-limited presigned URL in `image` or `profile_image`
 
 | Domain | Base path | Examples |
 | --- | --- | --- |
@@ -214,4 +224,4 @@ The Docker flow is the recommended path because it aligns PostgreSQL, Nginx, fro
 | Docker cannot pull images in WSL with credential errors | Remove `credsStore` / `credHelpers` from `~/.docker/config.json` or reset it to `{ "auths": {} }` |
 | Frontend cannot reach API | Confirm `VITE_API_BASE_URL=/api` and Nginx is running through Docker |
 | Backend cannot connect to database | Confirm Compose is using `DB_HOST=postgres` |
-| Uploaded images do not appear | Confirm `backend/media` is mounted and Django `MEDIA_ROOT=/app/media` |
+| Uploaded images do not appear | Confirm MinIO is running on `9000/9001`, `OBJECT_STORAGE_ENABLED=True`, and the backend logs show `ensure_storage_bucket` succeeded |
