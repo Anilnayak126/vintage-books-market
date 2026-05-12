@@ -11,7 +11,7 @@ const Footer = () => {
           <Link to="/term&C" className="text-gray-400 hover:text-white mx-3">Terms of Service</Link>
         </div>
         <div className="mt-4">
-          <p className="text-sm sm:text-base">Developed by ❤️ <span className="font-semibold text-white">Anil Kumar Nayak</span></p>
+          {/* <p className="text-sm sm:text-base">Developed by ❤️ <span className="font-semibold text-white">Anil Kumar Nayak</span></p> */}
           <div className="mt-2">
             <a 
               href="https://github.com/Anilnayak126" 
